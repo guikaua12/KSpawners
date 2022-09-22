@@ -1,0 +1,8 @@
+Lobo:
+  ativado: true
+  armorstand: false
+  head: "24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f"
+  entity: Wolf
+  drop-item: BONE
+  drop-valor-unitario: 1M
+  spawner-valor: 1M
