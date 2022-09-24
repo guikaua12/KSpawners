@@ -1,8 +1,33 @@
-Lobo:
-  ativado: true
-  armorstand: false
-  head: "24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f"
-  entity: Wolf
-  drop-item: BONE
-  drop-valor-unitario: 1M
-  spawner-valor: 1M
+Spawners:
+  Lobo:
+    Ativado: true
+    Item:
+      CustomHead: true
+      Head_url: "24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f"
+      Item: MONSTER_EGG:95
+      Name: '&Gerador de Lobo'
+      Lore:
+        - ''
+        - '&fTipo: &7Vaca&f.'
+        - '&fStack: &a{quantia}&f.'
+        - ''
+    Entity: WOLF
+    MobName: 'Lobo'
+    Drop-item: BONE:0
+    # Preço unitário ao vender o drop.
+    # Exemplo: O spawner tem 1000 drops, e o valor do Drop-Price é 200000 (200k),
+    # CADA drop vai ser vendido por 200k (1000 * 200000)
+    DropPrice: 200000
+    Loja:
+      Preco: 1000000
+      Item:
+        CustomHead: true
+        Head_url: "24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f"
+        Item: MONSTER_EGG:95
+        Name: '&Gerador de Lobo'
+        Lore:
+          - ''
+          - '&7Tipo: &fVaca&7.'
+          - '&7Preço: &f1M&7.'
+          - '&7Você pode comprar: &f{valorpc}&7.'
+          - ''

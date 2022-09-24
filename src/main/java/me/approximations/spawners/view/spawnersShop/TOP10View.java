@@ -3,11 +3,10 @@ package me.approximations.spawners.view.spawnersShop;
 import me.approximations.spawners.model.User;
 import me.saiintbrisson.minecraft.PaginatedView;
 import me.saiintbrisson.minecraft.PaginatedViewSlotContext;
-import me.saiintbrisson.minecraft.ViewContext;
 import me.saiintbrisson.minecraft.ViewItem;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class TOP10View extends PaginatedView<User> {
     public TOP10View() {
@@ -17,6 +16,11 @@ public class TOP10View extends PaginatedView<User> {
                   "XOOOOOOOX",
                   "XXXOOOXXX",
                   "XXXXXXXXX");
+    }
+
+    @Override
+    protected void onItemRender(@NotNull PaginatedViewSlotContext<User> paginatedViewSlotContext, @NotNull ViewItem viewItem, @NotNull User user) {
+        viewItem.withItem(new ItemStack(Material.ARROW));
     }
 
 //    @Override

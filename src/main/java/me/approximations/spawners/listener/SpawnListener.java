@@ -1,23 +1,16 @@
 package me.approximations.spawners.listener;
 
+import de.tr7zw.changeme.nbtapi.NBTEntity;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.serializer.LocationSerializer;
-import me.approximations.spawners.util.NBTEditor;
 import me.approximations.spawners.util.NumberUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.List;
@@ -101,6 +94,7 @@ public class SpawnListener implements Listener {
         entity.setMetadata("LOCATION", new FixedMetadataValue(Main.getInstance(), LocationSerializer.getInstance().encode(block.getLocation())));
         entity.setMetadata("QUANTIA", new FixedMetadataValue(Main.getInstance(), sp.getQuantia()));
         entity.setCustomName("§a"+sp.getNome()+" §7▶ §f"+ NumberUtils.format(sp.getQuantia(), false));
-        NBTEditor.set(entity, 1, "NoAI");
+        NBTEntity nbtEntity = new NBTEntity(entity);
+        nbtEntity.setByte("NoAI", (byte) 1);
     }
 }

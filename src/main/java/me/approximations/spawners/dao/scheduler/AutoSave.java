@@ -2,7 +2,6 @@ package me.approximations.spawners.dao.scheduler;
 
 import me.approximations.spawners.Main;
 import me.approximations.spawners.dao.UserDao;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSave extends BukkitRunnable {

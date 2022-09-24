@@ -3,8 +3,10 @@ package me.approximations.spawners.listener;
 import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
+import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.serializer.LocationSerializer;
 import me.approximations.spawners.util.TypeUtil;
+import me.approximations.spawners.util.Utils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -22,6 +24,7 @@ public class BreakListener implements Listener {
         if(!SpawnerManager.hasSpawner(block)) return;
         e.setCancelled(true);
         Spawner sp = SpawnerManager.getSpawner(block);
+        SpawnerWrapper sw = SpawnerManager.getSpawnersWrapper().get(sp.getSpawnerWrapperKey());
         Player player = e.getPlayer();
         if(!player.hasPermission("spawners.admin")) {
             if(!player.getName().equalsIgnoreCase(sp.getDono())) {
@@ -48,9 +51,8 @@ public class BreakListener implements Listener {
             }
         }
 
-        String nome = sp.getNome();
         double quantia = sp.getQuantia();
-        SpawnerManager.giveSpawner(player, quantia, nome);
+        Utils.giveItem(player, SpawnerManager.getSpawnerItem(sw, quantia));
         block.setType(Material.AIR);
     }
 }

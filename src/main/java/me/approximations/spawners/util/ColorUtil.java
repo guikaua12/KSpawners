@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.val;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
+
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -2,21 +2,18 @@ package me.approximations.spawners.model;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import me.approximations.spawners.Main;
 import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.serializer.LocationSerializer;
-import me.approximations.spawners.util.NumberUtils;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Data
-@AllArgsConstructor
 @Accessors(chain = true)
 public class Spawner {
     private String dono;
@@ -26,15 +23,19 @@ public class Spawner {
     private String location;
     private List<Amigo> amigos;
     private double dropValorUnitario;
+    private EntityType entityType;
+    private String spawnerWrapperKey;
 
-    public Spawner(String dono, String nome, double quantia, double drops, Location location, List<Amigo> amigos) {
+    public Spawner(String dono, double quantia, Location location, SpawnerWrapper sw) {
         this.dono = dono;
-        this.nome = nome;
+        this.nome = sw.getMobName();
         this.quantia = quantia;
-        this.drops = drops;
+        this.drops = 0D;
         this.location = LocationSerializer.getInstance().encode(location);
-        this.amigos = amigos;
-        SpawnerManager.setSpawner(location, this);
+        this.amigos = new ArrayList<>();
+        this.entityType = sw.getEntityType();
+        spawnerWrapperKey = sw.getKey();
+        SpawnerManager.setSpawner(this);
     }
 
     public double getDropsValorTotal() {
@@ -43,12 +44,12 @@ public class Spawner {
 
     public void addAmigo(Amigo amigo) {
         this.amigos.add(amigo);
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
     }
 
     public void removeAmigo(Amigo amigo) {
         this.amigos.remove(amigo);
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
     }
 
     public Amigo getAmigoByName(String name) {
@@ -58,23 +59,23 @@ public class Spawner {
 
     public Spawner addQuantia(double quantia) {
         this.quantia += quantia;
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
         return this;
     }
     public Spawner removeQuantia(double quantia) {
         this.quantia -= quantia;
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
         return this;
     }
 
     public Spawner addDrop(double drops) {
         this.drops += drops;
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
         return this;
     }
     public Spawner removeDrop(double drops) {
         this.drops -= drops;
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
         return this;
     }
 
@@ -82,21 +83,21 @@ public class Spawner {
         this.removeAmigo(amigo);
         amigo.setCanBreak(canBreak);
         this.addAmigo(amigo);
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
     }
 
     public void setAmigoCanPlace(Amigo amigo, Boolean canPlace) {
         this.removeAmigo(amigo);
         amigo.setCanPlace(canPlace);
         this.addAmigo(amigo);
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
     }
 
     public void setAmigoCanKill(Amigo amigo, Boolean canKill) {
         this.removeAmigo(amigo);
         amigo.setCanKill(canKill);
         this.addAmigo(amigo);
-        SpawnerManager.updateSpawner(this.getLocation(), this);
+        SpawnerManager.setSpawner(this);
     }
 
     public Location getLocation() {

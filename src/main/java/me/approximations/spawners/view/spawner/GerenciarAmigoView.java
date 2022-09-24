@@ -7,11 +7,10 @@ import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.TypeUtil;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashMap;
 
 public class GerenciarAmigoView extends View {
     private final ItemStack canPlaceFalse;
@@ -48,21 +47,21 @@ public class GerenciarAmigoView extends View {
     protected void onUpdate(@NotNull ViewContext context) {
         Spawner sp = getSpawner(context);
         Amigo amigo = getAmigo(context);
-        slot(10).onRender(render -> {
+        context.slot(10).onRender(render -> {
             render.setItem(amigo.isCanPlace() ? this.canPlaceTrue : this.canPlaceFalse);
         }).onClick(click -> {
             sp.setAmigoCanPlace(amigo, !amigo.isCanPlace());
             click.update();
         });
 
-        slot(11).onRender(render -> {
+        context.slot(11).onRender(render -> {
             render.setItem(amigo.isCanBreak() ? this.canBreakTrue : this.canBreakFalse);
         }).onClick(click -> {
             sp.setAmigoCanBreak(amigo, !amigo.isCanBreak());
             click.update();
         });
 
-        slot(12).onRender(render -> {
+        context.slot(12).onRender(render -> {
             render.setItem(amigo.isCanKill() ? this.canKillTrue : this.canKillFalse);
         }).onClick(click -> {
             sp.setAmigoCanKill(amigo, !amigo.isCanKill());

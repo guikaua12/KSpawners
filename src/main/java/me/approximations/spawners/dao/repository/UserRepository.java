@@ -1,8 +1,8 @@
 package me.approximations.spawners.dao.repository;
 
 import com.jaoow.sql.executor.SQLExecutor;
-import lombok.RequiredArgsConstructor;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.DatabaseConfig;
 import me.approximations.spawners.model.User;
 
 import java.sql.SQLException;
@@ -17,7 +17,7 @@ public class UserRepository{
     public UserRepository(Main plugin, SQLExecutor sqlExecutor) {
         this.plugin = plugin;
         this.sqlExecutor = sqlExecutor;
-        this.TABLE = plugin.getMconfig().getDbTable();
+        this.TABLE = DatabaseConfig.get(DatabaseConfig::getTable);
     }
 
 

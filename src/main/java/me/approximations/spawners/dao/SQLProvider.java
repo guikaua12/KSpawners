@@ -1,14 +1,15 @@
 package me.approximations.spawners.dao;
 
+import com.jaoow.sql.connector.type.impl.MySQLDatabaseType;
+import com.jaoow.sql.connector.type.impl.SQLiteDatabaseType;
 import com.jaoow.sql.executor.SQLExecutor;
 import me.approximations.spawners.Main;
-import me.approximations.spawners.config.MConfig;
-import org.bukkit.configuration.file.*;
-import org.bukkit.*;
-import org.bukkit.plugin.*;
-import java.sql.*;
-import com.jaoow.sql.connector.type.impl.*;
-import java.io.*;
+import me.approximations.spawners.configuration.DatabaseConfig;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+
+import java.io.File;
+import java.sql.SQLException;
 
 public class SQLProvider
 {
@@ -21,12 +22,11 @@ public class SQLProvider
     
     public SQLProvider(final Main plugin) {
         this.plugin = plugin;
-        MConfig CONFIG = plugin.getMconfig();
-        this.IP = CONFIG.getDbIp();
-        this.DB = CONFIG.getDbDb();
-        this.USER = CONFIG.getDbUser();
-        this.PASSWORD = CONFIG.getDbPassword();
-        this.TYPE = CONFIG.getDbType();
+        this.IP = DatabaseConfig.get(DatabaseConfig::getIp);
+        this.DB = DatabaseConfig.get(DatabaseConfig::getDb);
+        this.USER = DatabaseConfig.get(DatabaseConfig::getUser);
+        this.PASSWORD = DatabaseConfig.get(DatabaseConfig::getPassword);
+        this.TYPE = DatabaseConfig.get(DatabaseConfig::getType);
     }
     
     public SQLExecutor setupDatabase() {

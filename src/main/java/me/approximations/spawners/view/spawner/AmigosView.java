@@ -1,5 +1,6 @@
 package me.approximations.spawners.view.spawner;
 
+import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
@@ -39,22 +40,21 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onItemRender(PaginatedViewSlotContext<Amigo> render, ViewItem item, Amigo value) {
-        item.onRender(r -> {
-            r.setItem(new ItemBuilder(value.getNome(), (byte) 0)
-                    .setName("§a"+value.getNome())
-                    .setLore("§7Clique com o botão ", "§7ESQUERDO para gerenciar.",
+        item.withItem(new ItemBuilder(value.getNome(), (byte) 0)
+                .setName("§a"+value.getNome())
+                .setLore("§7Clique com o botão ", "§7ESQUERDO para gerenciar.",
                         "",
-                        "§7Clique com o botão ", "§7DIREITO para remover.").wrap()
-            );
-        }).onClick(click -> {
+                        "§7Clique com o botão ", "§7DIREITO para remover.")
+                .wrap()
+        ).onClick(click -> {
             Spawner sp = getSpawner(click);
             if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
                 click.getPlayer().sendMessage("§cVocê não é o dono do spawner.");
                 return;
             }
-            if(click.getClickOrigin().isLeftClick()) {
-                click.open(GerenciarAmigoView.class, click.getData());
-            }else if(click.getClickOrigin().isRightClick()) {
+            if(click.isLeftClick()) {
+                click.open(GerenciarAmigoView.class, ImmutableMap.of("spawner", sp, "amigo", value));
+            }else if(click.isRightClick()) {
                 sp.removeAmigo(value);
                 click.getPlayer().sendMessage("§aO jogador §f"+value.getNome()+" §afoi removido como amigo do seu spawner§8.");
                 click.update();
@@ -66,7 +66,7 @@ public class AmigosView extends PaginatedView<Amigo> {
     protected void onRender(ViewContext context) {
         context.update();
 
-        slot(48, new ItemBuilder("b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
+        context.slot(48, new ItemBuilder("b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
                 .setName("§aAdicionar jogador")
                 .setLore("§7Adicione jogadores ao", "§7seu spawner e gerencie", "§7suas permissões.")
                 .wrap()
@@ -102,7 +102,8 @@ public class AmigosView extends PaginatedView<Amigo> {
                             p.sendMessage("§cJogador não encontrado.");
                             return;
                         }
-                        sp.addAmigo(new Amigo(response, false, false, false));
+                        Amigo amg = new Amigo(response, false, false, false);
+                        sp.addAmigo(amg);
                         p.sendMessage("§aO jogador §f"+response+" §afoi adicionado como amigo ao seu spawner§8.");
                     })
                     .build());
@@ -112,10 +113,7 @@ public class AmigosView extends PaginatedView<Amigo> {
     @Override
     protected void onUpdate(@NotNull ViewContext context) {
         Spawner sp = getSpawner(context);
-        context.paginated().setSource(sp.getAmigos());
-
-
-
+        context.paginated().setSource($ -> sp.getAmigos());
     }
 
     public Spawner getSpawner(ViewContext context) {
