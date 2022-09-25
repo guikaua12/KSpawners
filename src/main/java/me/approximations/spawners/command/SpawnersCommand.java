@@ -1,8 +1,9 @@
 package me.approximations.spawners.command;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.nbtinjector.NBTInjector;
-import me.approximations.spawners.manager.SpawnerManager;
+import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import me.approximations.spawners.Main;
+import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
 import me.saiintbrisson.minecraft.command.annotation.Command;
 import me.saiintbrisson.minecraft.command.command.Context;
@@ -17,9 +18,10 @@ public class SpawnersCommand {
     )
     public void Command(Context<Player> e) {
         Player player = e.getSender();
-        Utils.giveItem(player, SpawnerManager.getSpawnerItem(SpawnerManager.getSpawnersWrapper().get("Lobo"), 10D));
+        Utils.giveItem(player, Main.getInstance().getSpawnerManager().getSpawnerItem(Main.getInstance().getSpawnerManager().getSpawnerWrapper("Lobo"), 10D));
         Block block = player.getLocation().subtract(0, 1, 0).getBlock();
-        NBTCompound c = NBTInjector.getNbtData(block.getState());
+        if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) return;
+        NBTCompound c = new NBTTileEntity(block.getState());
         player.sendMessage(c.toString());
     }
 }

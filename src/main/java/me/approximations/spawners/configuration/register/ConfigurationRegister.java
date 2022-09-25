@@ -4,6 +4,7 @@ import com.henryfabio.minecraft.configinjector.bukkit.injector.BukkitConfigurati
 import lombok.RequiredArgsConstructor;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.DatabaseConfig;
+import me.approximations.spawners.configuration.SpawnersConfig;
 
 @RequiredArgsConstructor
 public class ConfigurationRegister {
@@ -14,7 +15,7 @@ public class ConfigurationRegister {
 
         bukkitConfigurationInjector.saveDefaultConfiguration(plugin, "spawners.yml");
 
-        bukkitConfigurationInjector.injectConfiguration(DatabaseConfig.getInstance());
+        bukkitConfigurationInjector.injectConfiguration(DatabaseConfig.getInstance(), SpawnersConfig.getInstance());
     }
 
 }

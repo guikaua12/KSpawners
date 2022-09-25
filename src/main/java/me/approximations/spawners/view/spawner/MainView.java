@@ -3,23 +3,15 @@ package me.approximations.spawners.view.spawner;
 
 import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
-import me.approximations.spawners.manager.SpawnerManager;
-import me.approximations.spawners.model.Amigo;
+import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
-import me.approximations.spawners.serializer.LocationSerializer;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
@@ -33,15 +25,14 @@ public class MainView extends View {
     @Override
     protected void onRender(ViewContext context) {
         Spawner sp = getSpawner(context);
-        SpawnerWrapper sw = SpawnerManager.getSpawnersWrapper().get(sp.getSpawnerWrapperKey());
-        Bukkit.broadcastMessage(""+sw);
+        SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         context.slot(11, new ItemBuilder(sw.getColocavelItem())
                 .setName("§a"+sp.getNome())
                 .setLore("§fQuantia: §7"+ NumberUtils.format(sp.getQuantia(), false),
                         "",
                         "  §aValores§7:",
                         "§8▪ §fQuantia de drops: §7"+NumberUtils.format(sp.getDrops(), false),
-                        "§8▪ §fValor total dos drops: "+("§2$§7"+NumberUtils.format(sp.getDropsValorTotal(), false)),
+                        "§8▪ §fValor total dos drops: "+("§2$§7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)),
                         "",
                         "§fProprietário: §7"+ Bukkit.getOfflinePlayer(sp.getDono()).getName()
                 )
@@ -109,7 +100,7 @@ public class MainView extends View {
 
     public Spawner getSpawner(ViewContext context) {
         Spawner sp = context.get("spawner");
-        return SpawnerManager.getSpawner(sp.getLocation());
+        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
     }
 
 }

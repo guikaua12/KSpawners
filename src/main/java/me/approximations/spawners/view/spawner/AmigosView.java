@@ -1,7 +1,8 @@
 package me.approximations.spawners.view.spawner;
 
 import com.google.common.collect.ImmutableMap;
-import me.approximations.spawners.manager.SpawnerManager;
+import com.google.common.collect.Lists;
+import me.approximations.spawners.Main;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.util.ChatConversationUtils;
@@ -36,6 +37,7 @@ public class AmigosView extends PaginatedView<Amigo> {
         ).onClick(click -> {
             click.open(MainView.class, click.getData());
         });
+        setSource(context -> Lists.newArrayList(getSpawner(context).getAmigos().values()));
     }
 
     @Override
@@ -64,8 +66,6 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onRender(ViewContext context) {
-        context.update();
-
         context.slot(48, new ItemBuilder("b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
                 .setName("§aAdicionar jogador")
                 .setLore("§7Adicione jogadores ao", "§7seu spawner e gerencie", "§7suas permissões.")
@@ -112,12 +112,10 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onUpdate(@NotNull ViewContext context) {
-        Spawner sp = getSpawner(context);
-        context.paginated().setSource($ -> sp.getAmigos());
     }
 
     public Spawner getSpawner(ViewContext context) {
         Spawner sp = context.get("spawner");
-        return SpawnerManager.getSpawner(sp.getLocation());
+        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
     }
 }

@@ -2,7 +2,6 @@ package me.approximations.spawners.listener;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.approximations.spawners.Main;
-import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
@@ -11,14 +10,12 @@ import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceListener implements Listener {
@@ -31,14 +28,14 @@ public class PlaceListener implements Listener {
         e.setCancelled(true);
 
         Player player = e.getPlayer();
-        SpawnerWrapper sw = SpawnerManager.getSpawnersWrapper().get(nbtItem.getString("key"));
+        SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(nbtItem.getString("sw"));
         double quantia = nbtItem.getDouble("quantia");
 
         List<Block> blocks = Utils.getBlocksBetweenPoints(e.getBlock().getLocation().clone().add(5, 5, 5), e.getBlock().getLocation().clone().subtract(5, 5, 5));
         for (Block block : blocks) {
             if(block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) {
-                if(SpawnerManager.hasSpawner(block)) {
-                    Spawner sp = SpawnerManager.getSpawner(block);
+                if(Main.getInstance().getSpawnerManager().hasSpawner(block)) {
+                    Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
                     if(sp.getNome().equalsIgnoreCase(sw.getMobName())) {
                         if(!player.hasPermission("spawners.admin")) {
                             if(!player.getName().equalsIgnoreCase(sp.getDono())) {

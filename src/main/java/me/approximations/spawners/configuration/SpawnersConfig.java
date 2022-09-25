@@ -11,13 +11,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.function.Function;
 
 @TranslateColors
+@ConfigSection(value = "Spawners")
 @ConfigFile(value = "spawners.yml")
 @Getter
 public class SpawnersConfig implements ConfigurationInjectable {
     @Getter
     private static final SpawnersConfig instance = new SpawnersConfig();
 
-    @ConfigSection(value = "Spawners")
+    @ConfigField(value = "")
     private ConfigurationSection spawners;
 
     public static <T> T get(Function<SpawnersConfig, T> function) {

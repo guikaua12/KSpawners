@@ -2,7 +2,6 @@ package me.approximations.spawners.listener;
 
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import me.approximations.spawners.Main;
-import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.serializer.LocationSerializer;
 import me.approximations.spawners.util.NumberUtils;
@@ -19,8 +18,8 @@ public class SpawnListener implements Listener {
     @EventHandler
     public void onSpawnerSpawn(SpawnerSpawnEvent e) {
         Block block = e.getSpawner().getBlock();
-        if(!SpawnerManager.hasSpawner(block)) return;
-        Spawner sp = SpawnerManager.getSpawner(block);
+        if(!Main.getInstance().getSpawnerManager().hasSpawner(block)) return;
+        Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
 //        boolean useArmorstand = SpawnerManager.getSpawnerSection(sp.getNome()).getBoolean("armorstand");
         Entity entity = e.getEntity();
         List<Entity> entities = entity.getNearbyEntities(5.0, 5.0, 5.0);

@@ -1,6 +1,6 @@
 package me.approximations.spawners.listener;
 
-import me.approximations.spawners.manager.SpawnerManager;
+import me.approximations.spawners.Main;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
@@ -21,10 +21,10 @@ public class BreakListener implements Listener {
     public void onBlockBreak(BlockBreakEvent e) {
         Block block = e.getBlock();
         if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) return;
-        if(!SpawnerManager.hasSpawner(block)) return;
+        if(!Main.getInstance().getSpawnerManager().hasSpawner(block)) return;
         e.setCancelled(true);
-        Spawner sp = SpawnerManager.getSpawner(block);
-        SpawnerWrapper sw = SpawnerManager.getSpawnersWrapper().get(sp.getSpawnerWrapperKey());
+        Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
+        SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         Player player = e.getPlayer();
         if(!player.hasPermission("spawners.admin")) {
             if(!player.getName().equalsIgnoreCase(sp.getDono())) {
@@ -52,7 +52,7 @@ public class BreakListener implements Listener {
         }
 
         double quantia = sp.getQuantia();
-        Utils.giveItem(player, SpawnerManager.getSpawnerItem(sw, quantia));
+        Utils.giveItem(player, Main.getInstance().getSpawnerManager().getSpawnerItem(sw, quantia));
         block.setType(Material.AIR);
     }
 }

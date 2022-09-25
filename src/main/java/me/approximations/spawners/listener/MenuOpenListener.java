@@ -2,7 +2,6 @@ package me.approximations.spawners.listener;
 
 import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
-import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.util.TypeUtil;
@@ -20,8 +19,8 @@ public class MenuOpenListener implements Listener {
         if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         Block block = e.getClickedBlock();
         if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) return;
-        if(!SpawnerManager.hasSpawner(block)) return;
-        Spawner sp = SpawnerManager.getSpawner(block);
+        if(!Main.getInstance().getSpawnerManager().hasSpawner(block)) return;
+        Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
         Player player = e.getPlayer();
 
         if(!player.hasPermission("spawners.admin")) {

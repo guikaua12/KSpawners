@@ -1,13 +1,12 @@
 package me.approximations.spawners.view.spawner;
 
-import me.approximations.spawners.manager.SpawnerManager;
+import me.approximations.spawners.Main;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.TypeUtil;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -71,7 +70,7 @@ public class GerenciarAmigoView extends View {
 
     public Spawner getSpawner(ViewContext context) {
         Spawner sp = context.get("spawner");
-        return SpawnerManager.getSpawner(sp.getLocation());
+        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
     }
 
     public Amigo getAmigo(ViewContext context) {

@@ -70,6 +70,10 @@ public class ItemBuilder {
         return changeItemMeta(it -> it.setLore(lore));
     }
 
+    public List<String> getLore() {
+        return item.getItemMeta().getLore();
+    }
+
     public ItemStack wrap() {
         return item;
     }

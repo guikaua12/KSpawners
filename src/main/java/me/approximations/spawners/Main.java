@@ -4,7 +4,6 @@ import com.jaoow.sql.executor.SQLExecutor;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
 import me.approximations.spawners.command.SpawnersCommand;
-import me.approximations.spawners.configuration.DatabaseConfig;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.register.ConfigurationRegister;
 import me.approximations.spawners.dao.SQLProvider;
@@ -12,13 +11,15 @@ import me.approximations.spawners.dao.UserDao;
 import me.approximations.spawners.dao.adapter.UserAdapter;
 import me.approximations.spawners.dao.repository.UserRepository;
 import me.approximations.spawners.listener.*;
-import me.approximations.spawners.manager.SpawnerManager;
+import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.model.User;
 import me.approximations.spawners.util.ChatConversationUtils;
-import me.approximations.spawners.util.ConfigReader;
 import me.approximations.spawners.util.ItemBuilder;
+import me.approximations.spawners.util.NBTEditor;
 import me.approximations.spawners.util.TypeUtil;
+import me.approximations.spawners.versions.SpawnerManager_1_14;
+import me.approximations.spawners.versions.SpawnerManager_1_8_1_13;
 import me.approximations.spawners.view.spawner.AmigosView;
 import me.approximations.spawners.view.spawner.DropsView;
 import me.approximations.spawners.view.spawner.GerenciarAmigoView;
@@ -52,31 +53,38 @@ public class Main extends JavaPlugin {
     private UserRepository userRepository;
     @Getter
     private UserDao userDao;
+    @Getter
+    private SpawnerManager spawnerManager;
 
 
     @Override
     public void onLoad() {
         this.saveDefaultConfig();
         setupConfig();
-        NBTInjector.inject();
+        if(NBTEditor.getMinecraftVersion().greaterThanOrEqualTo(NBTEditor.MinecraftVersion.v1_14)) {
+            spawnerManager = new SpawnerManager_1_14();
+        }else {
+            NBTInjector.inject();
+            spawnerManager = new SpawnerManager_1_8_1_13();
+        }
     }
 
     @Override
     public void onEnable() {
         instance = this;
-        setupDatabase();
-        ChatConversationUtils.scheduleTimeoutRunnable();
-        setupListener();
-        setupCommand(this);
-        setupView();
-        setupShop();
-
         Bukkit.getServer().getScheduler().runTaskLater(this, () -> {
             if(!setupEconomy()) {
                 this.getLogger().log(Level.SEVERE, "Vault não encontrado, desabilitando plugin.");
                 Bukkit.getPluginManager().disablePlugin(this);
             }
         }, 150L);
+
+        setupDatabase();
+        ChatConversationUtils.scheduleTimeoutRunnable();
+        setupListener();
+        setupCommand(this);
+        setupView();
+        setupShop();
     }
 
     private void setupConfig() {
@@ -158,8 +166,9 @@ public class Main extends JavaPlugin {
                     .entityType(entity)
                     .mobName(mobName)
                     .dropItem(dropItem)
+                    .dropPrice(dropPrice)
                     .build();
-            SpawnerManager.getSpawnersWrapper().put(key, sw);
+            spawnerManager.insertSpawnerWrapper(sw);
         }
     }
 
