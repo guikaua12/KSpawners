@@ -5,6 +5,7 @@ import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
+import me.approximations.spawners.versions.SpawnerManager_1_14;
 import me.saiintbrisson.minecraft.command.annotation.Command;
 import me.saiintbrisson.minecraft.command.command.Context;
 import me.saiintbrisson.minecraft.command.target.CommandTarget;

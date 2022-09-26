@@ -47,21 +47,21 @@ public class SpawnerManager_1_14 implements SpawnerManager {
     }
 
     public void setSpawner(Spawner spawner) {
-        CreatureSpawner cs = (CreatureSpawner) spawner.getLocation().getBlock().getState();
-        cs.setSpawnedType(spawner.getEntityType());
-        cs.setMinSpawnDelay(100);
-        cs.setMaxSpawnDelay(100);
-        cs.setDelay(100);
-        cs.setSpawnRange(2);
+        Bukkit.getServer().getScheduler().runTaskLater(Main.getInstance(), () -> {
+            CreatureSpawner cs = (CreatureSpawner) spawner.getLocation().getBlock().getState();
+            cs.setSpawnedType(spawner.getEntityType());
+            cs.setMinSpawnDelay(100);
+            cs.setMaxSpawnDelay(100);
+            cs.setSpawnRange(2);
 
-        NamespacedKey ns = new NamespacedKey(Main.getInstance(), "spawner");
-        cs.getPersistentDataContainer().set(ns, PersistentDataType.STRING, SpawnerSerializer.getInstance().encode(spawner));
-        cs.update();
+            NamespacedKey ns = new NamespacedKey(Main.getInstance(), "spawner");
+            cs.getPersistentDataContainer().set(ns, PersistentDataType.STRING, SpawnerSerializer.getInstance().encode(spawner));
+            cs.update(true);
+        }, 1L);
     }
 
     public ItemStack getSpawnerItem(SpawnerWrapper sw, double quantia) {
-        // TODO: 24/09/2022 muda pra pdc
-        // TODO: 24/09/2022 fix erro de null 
+        // TODO: 24/09/2022 mudar pra pdc
         ItemStack is = sw.getColocavelItem().clone();
         List<String> lore = new ArrayList<>();
         for (String s : is.getItemMeta().getLore()) {
@@ -78,13 +78,14 @@ public class SpawnerManager_1_14 implements SpawnerManager {
     }
 
     public boolean hasSpawner(Location location) {
-        if(location.getBlock().getState() instanceof CreatureSpawner) return false;
+        if(!(location.getBlock().getState() instanceof CreatureSpawner)) return false;
         CreatureSpawner cs = (CreatureSpawner) location.getBlock().getState();
         return cs.getPersistentDataContainer().has(new NamespacedKey(Main.getInstance(), "spawner"), PersistentDataType.STRING);
     }
 
     public boolean hasSpawner(Block block) {
-        if(block.getState() instanceof CreatureSpawner) return false;
+//        if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER")))
+        if(!(block.getState() instanceof CreatureSpawner)) return false;
         CreatureSpawner cs = (CreatureSpawner) block.getState();
         return cs.getPersistentDataContainer().has(new NamespacedKey(Main.getInstance(), "spawner"), PersistentDataType.STRING);
     }
@@ -99,5 +100,7 @@ public class SpawnerManager_1_14 implements SpawnerManager {
         return SpawnerSerializer.getInstance().decode(cs.getPersistentDataContainer().get(new NamespacedKey(Main.getInstance(), "spawner"), PersistentDataType.STRING));
     }
 
-
+    public boolean isSpawnerItem(ItemStack is) {
+        return new NBTItem(is).hasKey("k-spawner");
+    }
 }

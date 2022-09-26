@@ -88,5 +88,7 @@ public class SpawnerManager_1_8_1_13 implements SpawnerManager {
         return NBTInjector.getNbtData(block.getState()).getObject("spawner", Spawner.class);
     }
 
-
+    public boolean isSpawnerItem(ItemStack is) {
+        return new NBTItem(is).hasKey("k-spawner");
+    }
 }

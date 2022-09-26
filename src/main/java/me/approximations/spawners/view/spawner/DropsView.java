@@ -45,8 +45,7 @@ public class DropsView extends View {
                 click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
                 return;
             }
-            click.set("spawner", sp.removeDrop(sp.getDrops()));
-            click.update();
+            click.updateSlot();
         });
     }
 

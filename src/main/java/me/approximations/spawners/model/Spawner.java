@@ -19,7 +19,6 @@ public class Spawner {
     private double drops;
     private String location;
     private HashMap<String, Amigo> amigos;
-    private double dropValorUnitario;
     private EntityType entityType;
     private String spawnerWrapperKey;
 

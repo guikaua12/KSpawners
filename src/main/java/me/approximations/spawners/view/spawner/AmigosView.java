@@ -37,7 +37,6 @@ public class AmigosView extends PaginatedView<Amigo> {
         ).onClick(click -> {
             click.open(MainView.class, click.getData());
         });
-        setSource(context -> Lists.newArrayList(getSpawner(context).getAmigos().values()));
     }
 
     @Override
@@ -66,6 +65,8 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onRender(ViewContext context) {
+        context.paginated().setSource(c -> Lists.newArrayList(getSpawner(c).getAmigos().values()));
+
         context.slot(48, new ItemBuilder("b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f")
                 .setName("§aAdicionar jogador")
                 .setLore("§7Adicione jogadores ao", "§7seu spawner e gerencie", "§7suas permissões.")

@@ -1,0 +1,18 @@
+Supported versions:
+1.8
+1.9
+1.11
+1.16
+
+Not supported:
+1.12:
+- EntityType not applying to the spawner
+1.13:
+- EntityType not applying to the spawner
+- NBTInjector does not work
+1.14:
+Unknown bug
+
+TODO:
+- Fix 1.14 unknown bug
+- Fix 1.16 GerenciasAmigosView items

@@ -17,4 +17,5 @@ public interface SpawnerManager {
     boolean hasSpawner(Block block);
     Spawner getSpawner(Location location);
     Spawner getSpawner(Block block);
+    boolean isSpawnerItem(ItemStack is);
 }
