@@ -43,7 +43,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\Approximations\Desktop\MC server\spigot_1.15\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Approximations\Desktop\MC server\sv1\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

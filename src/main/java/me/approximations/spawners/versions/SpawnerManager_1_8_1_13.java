@@ -5,16 +5,21 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
+import lombok.val;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
+import me.approximations.spawners.util.ColorUtil;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
+import me.approximations.spawners.util.TypeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -57,13 +62,27 @@ public class SpawnerManager_1_8_1_13 implements SpawnerManager {
     }
 
     public ItemStack getSpawnerItem(SpawnerWrapper sw, double quantia) {
-        ItemStack is = sw.getColocavelItem().clone();
-        List<String> lore = new ArrayList<>();
-        for (String s : is.getItemMeta().getLore()) {
-            lore.add(s.replace("{quantia}", NumberUtils.format(quantia, false)).replace("&", "§"));
-        }
+        ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey()).getConfigurationSection("Item");
         // {quantia}
-        is = new ItemBuilder(is).setLore(lore).wrap();
+        List<String> lore = new ArrayList<>();
+        for (String s : spawnerSection.getStringList("Lore")) {
+            String colored = ColorUtil.colored(s);
+            String q = colored.replace("{quantia}", NumberUtils.format(quantia, false));
+            lore.add(q);
+        }
+        ItemStack is;
+        if(spawnerSection.getBoolean("CustomHead")) {
+            is = new ItemBuilder(spawnerSection.getString("Head_url"))
+                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
+                    .setLore(lore)
+                    .wrap();
+        }else {
+            String[] i = spawnerSection.getString("Item").split(":");
+            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
+                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
+                    .setLore(lore)
+                    .wrap();
+        }
         NBTItem nbi = new NBTItem(is);
         nbi.setString("k-spawner", "k-spawner");
         nbi.setDouble("quantia", quantia);
