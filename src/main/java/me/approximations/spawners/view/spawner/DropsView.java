@@ -40,12 +40,15 @@ public class DropsView extends View {
                     "§fQuantia: §7"+ NumberUtils.format(sp.getDrops(), false),
                     "§fValor ao vender: §7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)).wrap());
         }).onClick(click -> {
+            if(sp.getDrops() < 1) return;
             EconomyResponse er = Main.getInstance().getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
             if(!er.transactionSuccess()) {
                 click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
                 return;
             }
+            click.set("spawner", sp.removeDrop(sp.getDrops()));
             click.updateSlot();
+//            click.update();
         });
     }
 

@@ -3,6 +3,7 @@ package me.approximations.spawners.command;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
 import me.approximations.spawners.versions.SpawnerManager_1_14;
@@ -24,5 +25,7 @@ public class SpawnersCommand {
         if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) return;
         NBTCompound c = new NBTTileEntity(block.getState());
         player.sendMessage(c.toString());
+//        Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
+//        sp.setDrops()
     }
 }

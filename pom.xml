@@ -43,7 +43,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.3.1</version>
                 <configuration>
-                    <outputDirectory>C:\Users\Approximations\Desktop\MC server\sv1\plugins</outputDirectory>
+                    <outputDirectory>C:\Users\Approximations\Desktop\MC server\spigot_1.15\plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
@@ -62,6 +62,10 @@
             <id>codemc-repo</id>
             <url>https://repo.codemc.org/repository/maven-public/</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>aikar</id>
+            <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
     </repositories>
 

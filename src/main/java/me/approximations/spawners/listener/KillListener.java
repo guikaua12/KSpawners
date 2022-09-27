@@ -1,16 +1,43 @@
 package me.approximations.spawners.listener;
 
 import me.approximations.spawners.Main;
+import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.serializer.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class KillListener implements Listener {
     private final Main plugin = Main.getInstance();
+    @EventHandler
+    public void onMobDamage(EntityDamageByEntityEvent e) {
+        if(!e.getEntity().hasMetadata("k-spawner")) return;
+        Location location = LocationSerializer.getInstance().decode(e.getEntity().getMetadata("LOCATION").get(0).asString());
+        Spawner spawner = plugin.getSpawnerManager().getSpawner(location);
+        if(spawner == null) return;
+        Player p = (Player) e.getDamager();
+        if(!p.hasPermission("spawners.admin")) {
+            if(!spawner.getDono().equalsIgnoreCase(p.getName())) {
+                Amigo amigo = spawner.getAmigoByName(p.getName());
+                if(amigo == null) {
+                    p.sendMessage("§cVocê não tem permissão para matar mobs desse spawner!");
+                    e.setCancelled(true);
+                    return;
+                }
+                if(!amigo.isCanKill()) {
+                    p.sendMessage("§cVocê não tem permissão para matar mobs desse spawner!");
+                    e.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void mobKillEvent(EntityDeathEvent e) {
         // TODO: 25/09/2022 melhorar o metadata
