@@ -37,7 +37,7 @@ public class ItemBuilder {
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         try {
             meta.setOwningPlayer(Bukkit.getOfflinePlayer(name));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             meta.setOwner(name);
         }
 
