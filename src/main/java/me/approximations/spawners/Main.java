@@ -36,6 +36,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class Main extends JavaPlugin {
@@ -59,6 +61,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        List<Integer> a = new ArrayList<Integer>();
         this.saveDefaultConfig();
         setupConfig();
         if(NBTEditor.getMinecraftVersion().greaterThanOrEqualTo(NBTEditor.MinecraftVersion.v1_14)) {

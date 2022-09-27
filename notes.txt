@@ -4,6 +4,8 @@ Supported versions:
 1.11
 1.15
 1.16
+1.17
+1.18
 
 Not supported:
 1.12:
