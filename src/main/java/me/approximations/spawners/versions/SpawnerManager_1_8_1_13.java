@@ -1,5 +1,6 @@
 package me.approximations.spawners.versions;
 
+import com.google.common.collect.ImmutableMap;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
@@ -11,10 +12,7 @@ import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
-import me.approximations.spawners.util.ColorUtil;
-import me.approximations.spawners.util.ItemBuilder;
-import me.approximations.spawners.util.NumberUtils;
-import me.approximations.spawners.util.TypeUtil;
+import me.approximations.spawners.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -63,26 +61,27 @@ public class SpawnerManager_1_8_1_13 implements SpawnerManager {
 
     public ItemStack getSpawnerItem(SpawnerWrapper sw, double quantia) {
         ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey()).getConfigurationSection("Item");
+        ItemStack is = Utils.getItemFromConfig(spawnerSection, ImmutableMap.of("{quantia}", NumberUtils.format(quantia, false)));
         // {quantia}
-        List<String> lore = new ArrayList<>();
-        for (String s : spawnerSection.getStringList("Lore")) {
-            String colored = ColorUtil.colored(s);
-            String q = colored.replace("{quantia}", NumberUtils.format(quantia, false));
-            lore.add(q);
-        }
-        ItemStack is;
-        if(spawnerSection.getBoolean("CustomHead")) {
-            is = new ItemBuilder(spawnerSection.getString("Head_url"))
-                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
-                    .setLore(lore)
-                    .wrap();
-        }else {
-            String[] i = spawnerSection.getString("Item").split(":");
-            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
-                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
-                    .setLore(lore)
-                    .wrap();
-        }
+//        List<String> lore = new ArrayList<>();
+//        for (String s : spawnerSection.getStringList("Lore")) {
+//            String colored = ColorUtil.colored(s);
+//            String q = colored.replace("{quantia}", NumberUtils.format(quantia, false));
+//            lore.add(q);
+//        }
+//        ItemStack is;
+//        if(spawnerSection.getBoolean("CustomHead")) {
+//            is = new ItemBuilder(spawnerSection.getString("Head_url"))
+//                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
+//                    .setLore(lore)
+//                    .wrap();
+//        }else {
+//            String[] i = spawnerSection.getString("Item").split(":");
+//            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
+//                    .setName(ColorUtil.colored(spawnerSection.getString("Name")))
+//                    .setLore(lore)
+//                    .wrap();
+//        }
         NBTItem nbi = new NBTItem(is);
         nbi.setString("k-spawner", "k-spawner");
         nbi.setDouble("quantia", quantia);

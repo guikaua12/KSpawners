@@ -1,15 +1,18 @@
 package me.approximations.spawners.view.spawner;
 
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
 import me.approximations.spawners.util.TypeUtil;
+import me.approximations.spawners.util.Utils;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class DropsView extends View {
@@ -35,8 +38,10 @@ public class DropsView extends View {
     protected void onUpdate(@NotNull ViewContext context) {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
+        ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         context.slot(13).onRender(render -> {
-            render.setItem(sp.getDrops() < 1 ? new ItemBuilder(TypeUtil.convertFromLegacy("WEB", 0)).setName("§cVazio").wrap() : new ItemBuilder(sw.getDropItem()).setName("§aDrop de "+sw.getMobName()).setLore("",
+            render.setItem(sp.getDrops() < 1 ? new ItemBuilder(TypeUtil.convertFromLegacy("WEB", 0)).setName("§cVazio").wrap() : Utils.getItemFromConfigSimple(spawnerSection.getString("Drop-item")).setName("§aDrop de "+sw.getMobName()).setLore(
+                    "",
                     "§fQuantia: §7"+ NumberUtils.format(sp.getDrops(), false),
                     "§fValor ao vender: §7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)).wrap());
         }).onClick(click -> {

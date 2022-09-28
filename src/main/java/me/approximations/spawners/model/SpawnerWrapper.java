@@ -10,9 +10,7 @@ import org.bukkit.inventory.ItemStack;
 public class SpawnerWrapper {
     private String key;
     private boolean ativado;
-    private ItemStack colocavelItem;
     private EntityType entityType;
     private String mobName;
-    private ItemStack dropItem;
     private double dropPrice;
 }
