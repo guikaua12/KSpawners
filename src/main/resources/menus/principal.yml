@@ -1,0 +1,34 @@
+Nome: 'Gerador'
+Tamanho: 3
+Info:
+  Slot: 11
+  CustomHead: true
+  Head_url: '24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f'
+  Item: MONSTER_EGG:95
+  Name: '&a{mobName}'
+  Lore:
+    - '&fQuantia: &7 {quantia}'
+    - ''
+    - '&a  Valores&7:'
+    - '&8▪ &fQuantia de drops: &7{drops}'
+    - '&8▪ &fValor total dos drops: &2$&7{valor_total}'
+    - ''
+    - '&fProprietário: &7{dono}'
+Drops:
+  Slot: 13
+  CustomHead: true
+  Head_url: 'e857766cccf167e41dc2a88b7203be3fb36cc8ff928536127b01875f6a4edbb6'
+  Item: STONE:0
+  Name: '&aDrops armazenados'
+  Lore:
+    - '&7Veja os drops armazenados'
+    - '&7dentro deste gerador.'
+Amigos:
+  Slot: 14
+  CustomHead: false
+  Head_url: 'e857766cccf167e41dc2a88b7203be3fb36cc8ff928536127b01875f6a4edbb6'
+  Item: COMPASS:0
+  Name: '&aPermissões'
+  Lore:
+    - '&7Ajuste as permissões dos'
+    - '&7amigos do seu gerador.'

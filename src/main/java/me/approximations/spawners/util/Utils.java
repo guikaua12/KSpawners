@@ -3,6 +3,7 @@ package me.approximations.spawners.util;
 
 import com.google.common.base.Strings;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Utils {
 //    public static ItemStack getHeadUrl(String url) {
@@ -175,10 +177,11 @@ public class Utils {
         List<String> lore = new ArrayList<>();
         for (String s : section.getStringList("Lore")) {
             String colored = ColorUtil.colored(s);
+            AtomicReference<String> q = new AtomicReference<>();
             replaces.forEach((k, v) -> {
-                String q = colored.replace(k, v);
-                lore.add(q);
+                if(colored.contains(k)) q.set(colored.replace(k, v));
             });
+            lore.add(q.get());
         }
 
         ItemStack is;

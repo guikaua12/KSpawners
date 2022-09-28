@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.DatabaseConfig;
 import me.approximations.spawners.configuration.SpawnersConfig;
+import me.approximations.spawners.configuration.inventory.MainInventory;
 
 @RequiredArgsConstructor
 public class ConfigurationRegister {
@@ -13,9 +14,11 @@ public class ConfigurationRegister {
     public void register() {
         BukkitConfigurationInjector bukkitConfigurationInjector = new BukkitConfigurationInjector(plugin);
 
-        bukkitConfigurationInjector.saveDefaultConfiguration(plugin, "spawners.yml");
+        bukkitConfigurationInjector.saveDefaultConfiguration(plugin, "spawners.yml",
+                "menus/principal.yml"
+        );
 
-        bukkitConfigurationInjector.injectConfiguration(DatabaseConfig.getInstance(), SpawnersConfig.getInstance());
+        bukkitConfigurationInjector.injectConfiguration(DatabaseConfig.getInstance(), SpawnersConfig.getInstance(), MainInventory.instance());
     }
 
 }
