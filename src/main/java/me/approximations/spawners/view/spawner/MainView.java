@@ -4,12 +4,14 @@ package me.approximations.spawners.view.spawner;
 import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.SpawnersConfig;
+import me.approximations.spawners.configuration.inventory.MainInventory;
 import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
 import me.approximations.spawners.util.TypeUtil;
+import me.approximations.spawners.util.Utils;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
 import org.bukkit.Bukkit;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 public class MainView extends View {
 
     public MainView() {
-        super(3, "Gerador");
+        super(MainInventory.get(MainInventory::size), MainInventory.get(MainInventory::name));
         setCancelOnClick(true);
     }
 
@@ -29,18 +31,27 @@ public class MainView extends View {
     protected void onRender(ViewContext context) {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
-        context.slot(11, new ItemBuilder(TypeUtil.getMaterialFromLegacy("SKULL_ITEM"))
-                .setName("§a"+sp.getNome())
-                .setLore("§fQuantia: §7"+ NumberUtils.format(sp.getQuantia(), false),
-                        "",
-                        "  §aValores§7:",
-                        "§8▪ §fQuantia de drops: §7"+NumberUtils.format(sp.getDrops(), false),
-                        "§8▪ §fValor total dos drops: "+("§2$§7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)),
-                        "",
-                        "§fProprietário: §7"+ Bukkit.getOfflinePlayer(sp.getDono()).getName()
-                )
-                .wrap()
-        );
+        ConfigurationSection infoItem = MainInventory.get(MainInventory::infoItem);
+
+        context.slot(infoItem.getInt("Slot"), Utils.getItemFromConfig(infoItem, ImmutableMap.of(
+                "{quantia}", NumberUtils.format(sp.getQuantia(), false),
+                "{drops}", NumberUtils.format(sp.getDrops(), false),
+                "{valor_total}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false),
+                "{dono}", sp.getDono()
+                )));
+
+//        context.slot(11, new ItemBuilder(TypeUtil.getMaterialFromLegacy("SKULL_ITEM"))
+//                .setName("§a"+sp.getNome())
+//                .setLore("§fQuantia: §7"+ NumberUtils.format(sp.getQuantia(), false),
+//                        "",
+//                        "  §aValores§7:",
+//                        "§8▪ §fQuantia de drops: §7"+NumberUtils.format(sp.getDrops(), false),
+//                        "§8▪ §fValor total dos drops: "+("§2$§7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)),
+//                        "",
+//                        "§fProprietário: §7"+ Bukkit.getOfflinePlayer(sp.getDono()).getName()
+//                )
+//                .wrap()
+//        );
 
         context.slot(13, new ItemBuilder("e857766cccf167e41dc2a88b7203be3fb36cc8ff928536127b01875f6a4edbb6")
                 .setName("§aDrops armazenados")
