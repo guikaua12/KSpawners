@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -168,5 +169,53 @@ public class Utils {
     public static void giveItem(Player player, ItemStack... is) {
         Map<Integer, ItemStack> map = player.getInventory().addItem(is);
         map.values().stream().filter(i -> !i.getType().equals(Material.AIR)).forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
+    }
+
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> replaces) {
+        List<String> lore = new ArrayList<>();
+        for (String s : section.getStringList("Lore")) {
+            String colored = ColorUtil.colored(s);
+            replaces.forEach((k, v) -> {
+                String q = colored.replace(k, v);
+                lore.add(q);
+            });
+        }
+
+        ItemStack is;
+        if(section.getBoolean("CustomHead")) {
+            is = new ItemBuilder(section.getString("Head_url"))
+                    .setName(section.getString("Name"))
+                    .setLore(lore)
+                    .wrap();
+        }else {
+            String[] i = section.getString("Item").split(":");
+            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
+                    .setName(section.getString("Name"))
+                    .setLore(lore)
+                    .wrap();
+        }
+        return is;
+    }
+
+    public static ItemStack getItemFromConfig(ConfigurationSection section) {
+        ItemStack is;
+        if(section.getBoolean("CustomHead")) {
+            is = new ItemBuilder(section.getString("Head_url"))
+                    .setName(section.getString("Name"))
+                    .setLore(section.getStringList("Lore"))
+                    .wrap();
+        }else {
+            String[] i = section.getString("Item").split(":");
+            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
+                    .setName(section.getString("Name"))
+                    .setLore(section.getStringList("Lore"))
+                    .wrap();
+        }
+        return is;
+    }
+
+    public static ItemBuilder getItemFromConfigSimple(String item) {
+        String[] i = item.split(":");
+        return new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]));
     }
 }

@@ -3,15 +3,18 @@ package me.approximations.spawners.view.spawner;
 
 import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
+import me.approximations.spawners.util.TypeUtil;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 
@@ -26,7 +29,7 @@ public class MainView extends View {
     protected void onRender(ViewContext context) {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
-        context.slot(11, new ItemBuilder(sw.getColocavelItem())
+        context.slot(11, new ItemBuilder(TypeUtil.getMaterialFromLegacy("SKULL_ITEM"))
                 .setName("§a"+sp.getNome())
                 .setLore("§fQuantia: §7"+ NumberUtils.format(sp.getQuantia(), false),
                         "",

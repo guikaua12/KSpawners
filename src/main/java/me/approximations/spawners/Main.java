@@ -141,34 +141,17 @@ public class Main extends JavaPlugin {
             }
             EntityType entity = EntityType.valueOf(spsection.getString("Entity"));
             String mobName = spsection.getString("MobName");
-            String[] i = spsection.getString("Drop-item").split(":");
-            ItemStack dropItem = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1])).wrap();
             double dropPrice = spsection.getDouble("DropPrice");
 
             //loja
             double shopPrice = spsection.getDouble("Loja.Preco");
-            ItemStack lojaItem;
-            if(spsection.getBoolean("Loja.Item.CustomHead")) {
-                lojaItem = new ItemBuilder(spsection.getString("Loja.Item.Head_url"))
-                        .setName(spsection.getString("Loja.Item.Name"))
-                        .setLore(spsection.getStringList("Loja.Item.Lore"))
-                        .wrap();
-            }else {
-                String[] it = spsection.getString("Loja.Item.Item").split(":");
-                lojaItem = new ItemBuilder(TypeUtil.getMaterialFromLegacy(it[0]), Integer.parseInt(it[1]))
-                        .setName(spsection.getString("Loja.Item.Name"))
-                        .setLore(spsection.getStringList("Loja.Item.Lore"))
-                        .wrap();
-            }
 
             // adicionar na map
             SpawnerWrapper sw = SpawnerWrapper.builder()
                     .key(key)
                     .ativado(ativado)
-                    .colocavelItem(colocavel)
                     .entityType(entity)
                     .mobName(mobName)
-                    .dropItem(dropItem)
                     .dropPrice(dropPrice)
                     .build();
             spawnerManager.insertSpawnerWrapper(sw);
