@@ -32,6 +32,8 @@ public class MainView extends View {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection infoItem = MainInventory.get(MainInventory::infoItem);
+        ConfigurationSection dropsItem = MainInventory.get(MainInventory::dropsItem);
+        ConfigurationSection amigosItem = MainInventory.get(MainInventory::amigosItem);
 
         context.slot(infoItem.getInt("Slot"), Utils.getItemFromConfig(infoItem, ImmutableMap.of(
                 "{quantia}", NumberUtils.format(sp.getQuantia(), false),
@@ -40,31 +42,11 @@ public class MainView extends View {
                 "{dono}", sp.getDono()
                 )));
 
-//        context.slot(11, new ItemBuilder(TypeUtil.getMaterialFromLegacy("SKULL_ITEM"))
-//                .setName("§a"+sp.getNome())
-//                .setLore("§fQuantia: §7"+ NumberUtils.format(sp.getQuantia(), false),
-//                        "",
-//                        "  §aValores§7:",
-//                        "§8▪ §fQuantia de drops: §7"+NumberUtils.format(sp.getDrops(), false),
-//                        "§8▪ §fValor total dos drops: "+("§2$§7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)),
-//                        "",
-//                        "§fProprietário: §7"+ Bukkit.getOfflinePlayer(sp.getDono()).getName()
-//                )
-//                .wrap()
-//        );
+        context.slot(dropsItem.getInt("Slot"), Utils.getItemFromConfig(dropsItem))
+                .onClick(click -> click.open(DropsView.class, ImmutableMap.of("spawner", getSpawner(context))));
 
-        context.slot(13, new ItemBuilder("e857766cccf167e41dc2a88b7203be3fb36cc8ff928536127b01875f6a4edbb6")
-                .setName("§aDrops armazenados")
-                .setLore("§7Veja os drops armazenados", "§7dentro deste gerador")
-                .wrap()
-        ).onClick(click -> click.open(DropsView.class, ImmutableMap.of("spawner", getSpawner(context))));
-
-        context.slot(14, new ItemBuilder(Material.COMPASS)
-                .setName("§aPermissões")
-                .setLore("§7Ajuste as permissões do", "§7seu gerador").wrap()
-        ).onClick(click -> {
-            click.open(AmigosView.class, new HashMap<String, Object>() {{put("spawner", getSpawner(context));}});
-        });
+        context.slot(amigosItem.getInt("Slot"), Utils.getItemFromConfig(amigosItem))
+                .onClick(click -> click.open(AmigosView.class, ImmutableMap.of("spawner", getSpawner(context))));
 
 //        context.slot(15, new ItemBuilder(Material.BARRIER)
 //                .setName("§cRemover spawner")

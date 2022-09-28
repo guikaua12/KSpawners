@@ -1,7 +1,9 @@
 package me.approximations.spawners.view.spawner;
 
+import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.SpawnersConfig;
+import me.approximations.spawners.configuration.inventory.DropsInventory;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.util.ItemBuilder;
@@ -17,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class DropsView extends View {
     public DropsView() {
-        super(4, "Drops");
+        super(DropsInventory.get(DropsInventory::size), DropsInventory.get(DropsInventory::name));
         setCancelOnClick(true);
 
 
@@ -39,22 +41,36 @@ public class DropsView extends View {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
-        context.slot(13).onRender(render -> {
-            render.setItem(sp.getDrops() < 1 ? new ItemBuilder(TypeUtil.convertFromLegacy("WEB", 0)).setName("§cVazio").wrap() : Utils.getItemFromConfigSimple(spawnerSection.getString("Drop-item")).setName("§aDrop de "+sw.getMobName()).setLore(
-                    "",
-                    "§fQuantia: §7"+ NumberUtils.format(sp.getDrops(), false),
-                    "§fValor ao vender: §7"+NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)).wrap());
-        }).onClick(click -> {
-            if(sp.getDrops() < 1) return;
-            EconomyResponse er = Main.getInstance().getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
-            if(!er.transactionSuccess()) {
-                click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
-                return;
-            }
-            click.set("spawner", sp.removeDrop(sp.getDrops()));
-            click.updateSlot();
-//            click.update();
-        });
+        ConfigurationSection vazioItem = DropsInventory.get(DropsInventory::vazioItem);
+        ConfigurationSection dropItem = DropsInventory.get(DropsInventory::dropItem);
+        context.getPlayer().sendMessage(""+sp.getDrops());
+
+        String[] dropIt = spawnerSection.getString("Drop-item").split(":");
+
+        if(sp.getDrops() < 1 ) {
+            context.slot(vazioItem.getInt("Slot")).onRender(render -> {
+                render.setItem(Utils.getItemFromConfig(vazioItem));
+            });
+        }else {
+            context.slot(dropItem.getInt("Slot"))
+                    .onRender(render -> {
+                        render.setItem(Utils.getItemFromConfig(dropItem, ImmutableMap.of(
+                                "{quantia}", NumberUtils.format(sp.getDrops(), false),
+                                "{valor_vender}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)
+                        ), TypeUtil.getMaterialFromLegacy(dropIt[0]), Integer.parseInt(dropIt[1])));
+                    }).onClick(click -> {
+                        if(sp.getDrops() < 1) return;
+                        EconomyResponse er = Main.getInstance().getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
+                        if(!er.transactionSuccess()) {
+                            click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
+                            return;
+                        }
+                        click.set("spawner", sp.removeDrop(sp.getDrops()));
+//                        click.updateSlot();
+                        click.update();
+                        click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
+                    });
+        }
     }
 
     public Spawner getSpawner(ViewContext context) {

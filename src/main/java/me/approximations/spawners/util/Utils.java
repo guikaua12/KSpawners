@@ -200,6 +200,25 @@ public class Utils {
         return is;
     }
 
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> replaces, Material material, int data) {
+        List<String> lore = new ArrayList<>();
+        for (String s : section.getStringList("Lore")) {
+            String colored = ColorUtil.colored(s);
+            AtomicReference<String> q = new AtomicReference<>();
+            replaces.forEach((k, v) -> {
+                if(colored.contains(k)) q.set(colored.replace(k, v));
+            });
+            lore.add(q.get());
+        }
+
+        ItemStack is;
+        is = new ItemBuilder(material, data)
+                .setName(section.getString("Name"))
+                .setLore(lore)
+                .wrap();
+        return is;
+    }
+
     public static ItemStack getItemFromConfig(ConfigurationSection section) {
         ItemStack is;
         if(section.getBoolean("CustomHead")) {
@@ -217,8 +236,8 @@ public class Utils {
         return is;
     }
 
-    public static ItemBuilder getItemFromConfigSimple(String item) {
+    public static ItemStack getItemFromConfigSimple(String item) {
         String[] i = item.split(":");
-        return new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]));
+        return new ItemStack(TypeUtil.getMaterialFromLegacy(i[0]), 1, Byte.parseByte(i[1]));
     }
 }

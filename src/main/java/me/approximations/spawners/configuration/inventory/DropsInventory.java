@@ -7,19 +7,18 @@ import com.henryfabio.minecraft.configinjector.common.annotations.TranslateColor
 import com.henryfabio.minecraft.configinjector.common.injector.ConfigurationInjectable;
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import me.approximations.spawners.configuration.DatabaseConfig;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.function.Function;
 
 @TranslateColors
 @ConfigSection(value = "")
-@ConfigFile(value = "menus/principal.yml")
+@ConfigFile(value = "menus/drops.yml")
 @Getter
 @Accessors(fluent = true)
-public class MainInventory implements ConfigurationInjectable {
+public class DropsInventory implements ConfigurationInjectable {
     @Getter
-    private static final MainInventory instance = new MainInventory();
+    private static final DropsInventory instance = new DropsInventory();
 
     @ConfigField(value = "Nome", colorize = true)
     private String name;
@@ -27,16 +26,13 @@ public class MainInventory implements ConfigurationInjectable {
     @ConfigField(value = "Tamanho", colorize = true)
     private int size;
 
-    @ConfigField(value = "Info")
-    private ConfigurationSection infoItem;
+    @ConfigField(value = "Drop_vazio")
+    private ConfigurationSection vazioItem;
 
-    @ConfigField(value = "Drops")
-    private ConfigurationSection dropsItem;
+    @ConfigField(value = "Drop")
+    private ConfigurationSection dropItem;
 
-    @ConfigField(value = "Amigos")
-    private ConfigurationSection amigosItem;
-
-    public static <T> T get(Function<MainInventory, T> function) {
+    public static <T> T get(Function<DropsInventory, T> function) {
         return function.apply(instance);
     }
 }
