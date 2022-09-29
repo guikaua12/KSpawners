@@ -1,12 +1,14 @@
 package me.approximations.spawners.listener;
 
 import me.approximations.spawners.Main;
+import me.approximations.spawners.api.event.SpawnerBreakEvent;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.serializer.LocationSerializer;
 import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -26,11 +28,23 @@ public class BreakListener implements Listener {
         if(!plugin.getSpawnerManager().hasSpawner(block)) return;
         e.setCancelled(true);
         Spawner sp = plugin.getSpawnerManager().getSpawner(block);
-        SpawnerWrapper sw = plugin.getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
+        SpawnerWrapper sw = sp.getSpawnerWrapper();
         Player player = e.getPlayer();
+
+        SpawnerBreakEvent spawnerBreakEvent = new SpawnerBreakEvent(player, sp);
+        Bukkit.getPluginManager().callEvent(spawnerBreakEvent);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSpawnerBreak(SpawnerBreakEvent e) {
+        if(e.isCancelled()) return;
+        Spawner spawner = e.getSpawner();
+        SpawnerWrapper sw = spawner.getSpawnerWrapper();
+        Player player = e.getPlayer();
+
         if(!player.hasPermission("spawners.admin")) {
-            if(!player.getName().equalsIgnoreCase(sp.getDono())) {
-                Amigo amigo = sp.getAmigoByName(player.getName());
+            if(!player.getName().equalsIgnoreCase(spawner.getDono())) {
+                Amigo amigo = spawner.getAmigoByName(player.getName());
                 if(amigo == null) {
                     player.sendMessage("§cVocê não tem permissão para remover geradores.");
                     return;
@@ -42,19 +56,16 @@ public class BreakListener implements Listener {
             }
         }
 
-        for (Entity entity : block.getWorld().getNearbyEntities(block.getLocation(), 5.0, 5.0, 5.0)) {
+        for (Entity entity : spawner.getLocation().getWorld().getNearbyEntities(spawner.getLocation(), 5.0, 5.0, 5.0)) {
             if(!entity.getType().equals(EntityType.PLAYER)) {
-                if(entity.hasMetadata("LOCATION") && LocationSerializer.getInstance().encode(block.getLocation()).equalsIgnoreCase(entity.getMetadata("LOCATION").get(0).asString())) {
+                if(entity.hasMetadata("LOCATION") && LocationSerializer.getInstance().encode(spawner.getLocation()).equalsIgnoreCase(entity.getMetadata("LOCATION").get(0).asString())) {
                     entity.remove();
-                    if(entity.getPassenger() != null) {
-                        entity.getPassenger().remove();
-                    }
                 }
             }
         }
 
-        double quantia = sp.getQuantia();
+        double quantia = spawner.getQuantia();
         Utils.giveItem(player, plugin.getSpawnerManager().getSpawnerItem(sw, quantia));
-        block.setType(Material.AIR);
+        spawner.getLocation().getBlock().setType(Material.AIR);
     }
 }

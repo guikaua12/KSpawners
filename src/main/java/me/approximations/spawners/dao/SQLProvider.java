@@ -5,6 +5,7 @@ import com.jaoow.sql.connector.type.impl.SQLiteDatabaseType;
 import com.jaoow.sql.executor.SQLExecutor;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.DatabaseConfig;
+import me.approximations.spawners.dao.listener.JoinLeaveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -54,5 +55,9 @@ public class SQLProvider
             }
         }
         return null;
+    }
+
+    public void registerEvents() {
+        Bukkit.getPluginManager().registerEvents(new JoinLeaveEvent(), plugin);
     }
 }

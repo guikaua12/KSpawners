@@ -1,8 +1,10 @@
 package me.approximations.spawners.listener;
 
 import me.approximations.spawners.Main;
+import me.approximations.spawners.dao.UserDao;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
+import me.approximations.spawners.model.User;
 import me.approximations.spawners.serializer.LocationSerializer;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
