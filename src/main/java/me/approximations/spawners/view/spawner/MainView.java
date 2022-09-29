@@ -25,6 +25,14 @@ public class MainView extends View {
     public MainView() {
         super(MainInventory.get(MainInventory::size), MainInventory.get(MainInventory::name));
         setCancelOnClick(true);
+        ConfigurationSection dropsItem = MainInventory.get(MainInventory::dropsItem);
+        ConfigurationSection amigosItem = MainInventory.get(MainInventory::amigosItem);
+
+        slot(dropsItem.getInt("Slot"), Utils.getItemFromConfig(dropsItem))
+                .onClick(click -> click.open(DropsView.class, ImmutableMap.of("spawner", getSpawner(click))));
+
+        slot(amigosItem.getInt("Slot"), Utils.getItemFromConfig(amigosItem))
+                .onClick(click -> click.open(AmigosView.class, ImmutableMap.of("spawner", getSpawner(click))));
     }
 
     @Override
@@ -32,21 +40,14 @@ public class MainView extends View {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection infoItem = MainInventory.get(MainInventory::infoItem);
-        ConfigurationSection dropsItem = MainInventory.get(MainInventory::dropsItem);
-        ConfigurationSection amigosItem = MainInventory.get(MainInventory::amigosItem);
 
         context.slot(infoItem.getInt("Slot"), Utils.getItemFromConfig(infoItem, ImmutableMap.of(
+                "{mobName}", sw.getMobName(),
                 "{quantia}", NumberUtils.format(sp.getQuantia(), false),
                 "{drops}", NumberUtils.format(sp.getDrops(), false),
                 "{valor_total}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false),
                 "{dono}", sp.getDono()
                 )));
-
-        context.slot(dropsItem.getInt("Slot"), Utils.getItemFromConfig(dropsItem))
-                .onClick(click -> click.open(DropsView.class, ImmutableMap.of("spawner", getSpawner(context))));
-
-        context.slot(amigosItem.getInt("Slot"), Utils.getItemFromConfig(amigosItem))
-                .onClick(click -> click.open(AmigosView.class, ImmutableMap.of("spawner", getSpawner(context))));
 
 //        context.slot(15, new ItemBuilder(Material.BARRIER)
 //                .setName("§cRemover spawner")

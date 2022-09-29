@@ -13,12 +13,12 @@ import java.util.function.Function;
 
 @TranslateColors
 @ConfigSection(value = "")
-@ConfigFile(value = "menus/drops.yml")
+@ConfigFile(value = "menus/amigos.yml")
 @Getter
 @Accessors(fluent = true)
-public class DropsInventory implements ConfigurationInjectable {
+public class AmigosInventory implements ConfigurationInjectable {
     @Getter
-    private static final DropsInventory instance = new DropsInventory();
+    private static final AmigosInventory instance = new AmigosInventory();
 
     @ConfigField(value = "Nome", colorize = true)
     private String name;
@@ -26,17 +26,16 @@ public class DropsInventory implements ConfigurationInjectable {
     @ConfigField(value = "Tamanho", colorize = true)
     private int size;
 
-    @ConfigField(value = "Drop_vazio")
-    private ConfigurationSection vazioItem;
-
-    @ConfigField(value = "Drop")
-    private ConfigurationSection dropItem;
-
     @ConfigField(value = "VoltarItem")
     private ConfigurationSection voltarItem;
 
+    @ConfigField(value = "AdicionarAmigo")
+    private ConfigurationSection adicionarAmigoItem;
 
-    public static <T> T get(Function<DropsInventory, T> function) {
+    @ConfigField(value = "Amigo")
+    private ConfigurationSection amigoItem;
+
+    public static <T> T get(Function<AmigosInventory, T> function) {
         return function.apply(instance);
     }
 }

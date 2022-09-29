@@ -3,7 +3,6 @@ package me.approximations.spawners.util;
 
 import com.google.common.base.Strings;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class Utils {
 //    public static ItemStack getHeadUrl(String url) {
@@ -173,67 +173,54 @@ public class Utils {
         map.values().stream().filter(i -> !i.getType().equals(Material.AIR)).forEach(i -> player.getWorld().dropItemNaturally(player.getLocation(), i));
     }
 
-    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> replaces) {
-        List<String> lore = new ArrayList<>();
-        for (String s : section.getStringList("Lore")) {
-            String colored = ColorUtil.colored(s);
-            AtomicReference<String> q = new AtomicReference<>();
-            replaces.forEach((k, v) -> {
-                if(colored.contains(k)) q.set(colored.replace(k, v));
-            });
-            lore.add(q.get());
-        }
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> placeholders) {
+        String name = section.getString("Name");
+        List<String> lore = section.getStringList("Lore");
+        String[] item = section.getString("Item").split(":");
 
-        ItemStack is;
-        if(section.getBoolean("CustomHead")) {
-            is = new ItemBuilder(section.getString("Head_url"))
-                    .setName(section.getString("Name"))
-                    .setLore(lore)
-                    .wrap();
-        }else {
-            String[] i = section.getString("Item").split(":");
-            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
-                    .setName(section.getString("Name"))
-                    .setLore(lore)
-                    .wrap();
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            name = name.replace(entry.getKey(), entry.getValue());
+            lore.replaceAll(line -> ColorUtil.colored(line.replace(entry.getKey(), entry.getValue())));
         }
-        return is;
+        if(section.getBoolean("CustomHead")) {
+            return new ItemBuilder(section.getString("Head_url")).setName(name).setLore(lore).wrap();
+        }else {
+            return new ItemBuilder(TypeUtil.getMaterialFromLegacy(item[0]), Integer.parseInt(item[1])).setName(name).setLore(lore).wrap();
+        }
     }
 
-    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> replaces, Material material, int data) {
-        List<String> lore = new ArrayList<>();
-        for (String s : section.getStringList("Lore")) {
-            String colored = ColorUtil.colored(s);
-            AtomicReference<String> q = new AtomicReference<>();
-            replaces.forEach((k, v) -> {
-                if(colored.contains(k)) q.set(colored.replace(k, v));
-            });
-            lore.add(q.get());
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> placeholders, Material material, int data) {
+        String name = section.getString("Name");
+        List<String> lore = section.getStringList("Lore");
+
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            name = name.replace(entry.getKey(), entry.getValue());
+            lore.replaceAll(line -> ColorUtil.colored(line.replace(entry.getKey(), entry.getValue())));
         }
 
-        ItemStack is;
-        is = new ItemBuilder(material, data)
-                .setName(section.getString("Name"))
-                .setLore(lore)
-                .wrap();
-        return is;
+        return new ItemBuilder(material, data).setName(name).setLore(lore).wrap();
     }
 
     public static ItemStack getItemFromConfig(ConfigurationSection section) {
-        ItemStack is;
         if(section.getBoolean("CustomHead")) {
-            is = new ItemBuilder(section.getString("Head_url"))
+            return new ItemBuilder(section.getString("Head_url"))
                     .setName(section.getString("Name"))
                     .setLore(ColorUtil.colored(section.getStringList("Lore")))
                     .wrap();
         }else {
             String[] i = section.getString("Item").split(":");
-            is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
+            return new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
                     .setName(section.getString("Name"))
                     .setLore(ColorUtil.colored(section.getStringList("Lore")))
                     .wrap();
         }
-        return is;
+    }
+
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Material material, int data) {
+        return new ItemBuilder(material, data)
+                .setName(section.getString("Name"))
+                .setLore(ColorUtil.colored(section.getStringList("Lore")))
+                .wrap();
     }
 
     public static ItemStack getItemFromConfigSimple(String item) {

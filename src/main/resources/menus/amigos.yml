@@ -1,0 +1,33 @@
+Nome: 'Gerador - Amigos'
+Tamanho: 6
+
+VoltarItem:
+  Slot: 49
+  CustomHead: false
+  Head_url: 'bf40c7716267b1f469ae730d013b140027d8419c12d71f0719817ac0a1f7f09d'
+  Item: ARROW:0
+  Name: '&cVoltar'
+  Lore:
+
+AdicionarAmigo:
+  Slot: 48
+  CustomHead: false
+  Head_url: 'b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f'
+  Item: ARROW:0
+  Name: '&aAdicionar jogador'
+  Lore:
+    - '&7Adicione jogadores ao'
+    - '&7seu spawner e gerencie'
+    - '&7suas permissões.'
+
+Amigo:
+  CustomHead: true
+  Head_url: '{player}'
+  Item: ARROW:0
+  Name: '{player}'
+  Lore:
+    - '&7Clique com o botão '
+    - '&7ESQUERDO para gerenciar.'
+    - ''
+    - '&7Clique com o botão '
+    - '&7DIREITO para remover.'
