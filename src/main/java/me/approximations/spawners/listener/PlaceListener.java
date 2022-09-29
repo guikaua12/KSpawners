@@ -48,8 +48,42 @@ public class PlaceListener implements Listener {
         Bukkit.getPluginManager().callEvent(spawnerPlaceEvent);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlaceTeste(SpawnerPlaceEvent e) {
-        e.setCancelled(true);
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onSpawnerPlace(SpawnerPlaceEvent e) {
+        if(e.isCancelled()) return;
+        Spawner spawner = e.getSpawner();
+        SpawnerWrapper sw = spawner.getSpawnerWrapper();
+        Player player = e.getPlayer();
+        List<Block> blocks = Utils.getBlocksBetweenPoints(spawner.getLocation().clone().add(5, 5, 5), spawner.getLocation().clone().subtract(5, 5, 5));
+        for (Block block : blocks) {
+            if (!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) continue;
+            if (!plugin.getSpawnerManager().hasSpawner(block)) continue;
+            Spawner sp = plugin.getSpawnerManager().getSpawner(block);
+            if (sp.getNome().equalsIgnoreCase(sw.getMobName())) {
+                if (!player.hasPermission("spawners.admin")) {
+                    if (!player.getName().equalsIgnoreCase(sp.getDono())) {
+                        Amigo amigo = sp.getAmigoByName(player.getName());
+                        if (amigo == null) {
+                            player.sendMessage("§cVocê não tem permissão para adicionar geradores.");
+                            return;
+                        }
+                        if (!amigo.isCanPlace()) {
+                            player.sendMessage("§cVocê não tem permissão para adicionar geradores.");
+                            return;
+                        }
+                    }
+                }
+                sp.addQuantia(spawner.getQuantia());
+                Utils.removeItemInHand(player, 1);
+                player.sendMessage("§aForam adicionados " + NumberUtils.format(spawner.getQuantia(), false) + " spawners.");
+                return;
+            } else {
+                player.sendMessage("§cHá spawners num raio de 5 blocos.");
+                return;
+            }
+        }
+        Utils.removeItemInHand(player, 1);
+
+        plugin.getSpawnerManager().setSpawner(spawner);
     }
 }

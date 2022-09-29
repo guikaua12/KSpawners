@@ -5,4 +5,4 @@ database:
   db: 'test'
   user: 'root'
   password: ''
-  table: 'bosses'
+  table: 'spawners'

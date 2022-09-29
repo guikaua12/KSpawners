@@ -3,7 +3,6 @@ package me.approximations.spawners;
 import com.jaoow.sql.executor.SQLExecutor;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
-import me.approximations.spawners.api.listener.SpawnerPlaceListener;
 import me.approximations.spawners.command.SpawnersCommand;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.register.ConfigurationRegister;
@@ -97,7 +96,6 @@ public class Main extends JavaPlugin {
 
     private void setupListener() {
         Bukkit.getPluginManager().registerEvents(new PlaceListener(), this);
-        Bukkit.getPluginManager().registerEvents(new SpawnerPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
         Bukkit.getPluginManager().registerEvents(new SpawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new KillListener(), this);
@@ -146,10 +144,16 @@ public class Main extends JavaPlugin {
     }
 
     private void setupDatabase() {
+        SQLProvider sqlProvider = new SQLProvider(this);
         sqlExecutor = new SQLProvider(this).setupDatabase();
         UserAdapter ua = new UserAdapter();
         sqlExecutor.registerAdapter(User.class, ua);
         userRepository = new UserRepository(this, sqlExecutor);
+        userRepository.createTable();
+
+        userDao = new UserDao(userRepository, this);
+
+        sqlProvider.registerEvents();
     }
 
     private boolean setupEconomy() {
