@@ -1,14 +1,11 @@
 package me.approximations.spawners.versions;
 
 import com.google.common.collect.ImmutableMap;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
-import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.SpawnersConfig;
-import me.approximations.spawners.manager.model.SpawnerManager;
+import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.serializer.SpawnerSerializer;
@@ -19,8 +16,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 

@@ -7,6 +7,7 @@ import me.approximations.spawners.configuration.DatabaseConfig;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.inventory.AmigosInventory;
 import me.approximations.spawners.configuration.inventory.DropsInventory;
+import me.approximations.spawners.configuration.inventory.GerenciarAmigosInventory;
 import me.approximations.spawners.configuration.inventory.MainInventory;
 
 @RequiredArgsConstructor
@@ -20,7 +21,8 @@ public class ConfigurationRegister {
                 "spawners.yml",
                 "menus/principal.yml",
                 "menus/drops.yml",
-                "menus/amigos.yml"
+                "menus/amigos.yml",
+                "menus/gerenciar_amigos.yml"
         );
 
         bukkitConfigurationInjector.injectConfiguration(
@@ -28,7 +30,8 @@ public class ConfigurationRegister {
                 SpawnersConfig.getInstance(),
                 MainInventory.instance(),
                 DropsInventory.instance(),
-                AmigosInventory.instance()
+                AmigosInventory.instance(),
+                GerenciarAmigosInventory.instance()
         );
     }
 
