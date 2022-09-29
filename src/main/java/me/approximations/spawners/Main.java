@@ -3,6 +3,7 @@ package me.approximations.spawners;
 import com.jaoow.sql.executor.SQLExecutor;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
+import me.approximations.spawners.api.listener.SpawnerPlaceListener;
 import me.approximations.spawners.command.SpawnersCommand;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.register.ConfigurationRegister;
@@ -96,17 +97,16 @@ public class Main extends JavaPlugin {
 
     private void setupListener() {
         Bukkit.getPluginManager().registerEvents(new PlaceListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SpawnerPlaceListener(), this);
         Bukkit.getPluginManager().registerEvents(new BreakListener(), this);
         Bukkit.getPluginManager().registerEvents(new SpawnListener(), this);
         Bukkit.getPluginManager().registerEvents(new KillListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PreventItemClean(), this);
         Bukkit.getPluginManager().registerEvents(new MenuOpenListener(), this);
         ChatConversationUtils.registerListener();
     }
 
     private void setupView() {
         viewFrame = ViewFrame.of(this,
-//                new SpawnersView(),
                 new MainView(),
                 new DropsView(this),
                 new AmigosView(),
@@ -126,19 +126,6 @@ public class Main extends JavaPlugin {
             //
             ConfigurationSection spsection = s.getConfigurationSection(key);
             boolean ativado = spsection.getBoolean("Ativado");
-            ItemStack colocavel;
-            if(spsection.getBoolean("Item.CustomHead")) {
-                colocavel = new ItemBuilder(spsection.getString("Item.Head_url"))
-                        .setName(spsection.getString("Item.Name"))
-                        .setLore(spsection.getStringList("Item.Lore"))
-                        .wrap();
-            }else {
-                String[] i = spsection.getString("Item.Item").split(":");
-                colocavel = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
-                        .setName(spsection.getString("Item.Name"))
-                        .setLore(spsection.getStringList("Item.Lore"))
-                        .wrap();
-            }
             EntityType entity = EntityType.valueOf(spsection.getString("Entity"));
             String mobName = spsection.getString("MobName");
             double dropPrice = spsection.getDouble("DropPrice");

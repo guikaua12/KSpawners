@@ -8,13 +8,14 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class KillListener implements Listener {
     private final Main plugin = Main.getInstance();
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onMobDamage(EntityDamageByEntityEvent e) {
         if(!e.getEntity().hasMetadata("k-spawner")) return;
         Location location = LocationSerializer.getInstance().decode(e.getEntity().getMetadata("LOCATION").get(0).asString());
@@ -38,7 +39,7 @@ public class KillListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void mobKillEvent(EntityDeathEvent e) {
         // TODO: 25/09/2022 melhorar o metadata
         Entity entity = e.getEntity();

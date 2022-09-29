@@ -26,11 +26,6 @@ public class DropsView extends View {
         setCancelOnClick(true);
 
         ConfigurationSection voltarItem = DropsInventory.get(DropsInventory::voltarItem);
-        plugin.getLogger().info(""+voltarItem);
-        if (voltarItem != null) {
-            plugin.getLogger().info(""+voltarItem.getInt("Slot"));
-            plugin.getLogger().info(""+Utils.getItemFromConfig(voltarItem));
-        }
         slot(voltarItem.getInt("Slot"), Utils.getItemFromConfig(voltarItem)).onClick(click -> {
             click.open(MainView.class, click.getData());
         });

@@ -11,7 +11,7 @@ VoltarItem:
 
 AdicionarAmigo:
   Slot: 48
-  CustomHead: false
+  CustomHead: true
   Head_url: 'b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f'
   Item: ARROW:0
   Name: '&aAdicionar jogador'
