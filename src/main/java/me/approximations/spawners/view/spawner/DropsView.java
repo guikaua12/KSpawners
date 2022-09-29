@@ -13,6 +13,7 @@ import me.approximations.spawners.util.Utils;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
 import net.milkbowl.vault.economy.EconomyResponse;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -24,25 +25,24 @@ public class DropsView extends View {
         this.plugin = plugin;
         setCancelOnClick(true);
 
-
-        slot(31, new ItemBuilder(Material.ARROW)
-                .setName("§cVoltar")
-                .wrap()
-        ).onClick(click -> {
+        ConfigurationSection voltarItem = DropsInventory.get(DropsInventory::voltarItem);
+        plugin.getLogger().info(""+voltarItem);
+        if (voltarItem != null) {
+            plugin.getLogger().info(""+voltarItem.getInt("Slot"));
+            plugin.getLogger().info(""+Utils.getItemFromConfig(voltarItem));
+        }
+        slot(voltarItem.getInt("Slot"), Utils.getItemFromConfig(voltarItem)).onClick(click -> {
             click.open(MainView.class, click.getData());
         });
     }
 
     @Override
     protected void onRender(ViewContext context) {
-        //get the spawner
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = plugin.getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         ConfigurationSection vazioItem = DropsInventory.get(DropsInventory::vazioItem);
         ConfigurationSection dropItem = DropsInventory.get(DropsInventory::dropItem);
-        //for debug purposes
-        context.getPlayer().sendMessage(""+sp.getDrops());
 
         String[] dropIt = spawnerSection.getString("Drop-item").split(":");
 
@@ -51,23 +51,20 @@ public class DropsView extends View {
                 return Utils.getItemFromConfig(vazioItem);
             }else {
                 return Utils.getItemFromConfig(dropItem, ImmutableMap.of(
-                    "{quantia}", NumberUtils.format(sp.getDrops(), false),
-                    "{valor_vender}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)
+                        "{mobName}", sw.getMobName(),
+                        "{quantia}", NumberUtils.format(sp.getDrops(), false),
+                        "{valor_vender}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)
                 ), TypeUtil.getMaterialFromLegacy(dropIt[0]), Integer.parseInt(dropIt[1]));
             }
         }).onClick(click -> {
-            //deposit the money to the player
             if(sp.getDrops() < 1) return;
             EconomyResponse er = plugin.getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
             if(!er.transactionSuccess()) {
                 click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
                 return;
             }
-            //remove the spawner drops and set it to the context
-            //the spawner is updated within the removeDrop() method so its safe
             click.set("spawner", sp.removeDrop(sp.getDrops()));
             click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
-            //update
             click.update();
         });
     }

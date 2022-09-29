@@ -1,5 +1,13 @@
 Nome: 'Gerador - Drops'
 Tamanho: 4
+
+VoltarItem:
+  Slot: 31
+  CustomHead: false
+  Head_url: 'bf40c7716267b1f469ae730d013b140027d8419c12d71f0719817ac0a1f7f09d'
+  Item: ARROW:0
+  Name: '&cVoltar'
+  Lore:
 Drop_vazio:
   CustomHead: false
   Head_url: 'bf40c7716267b1f469ae730d013b140027d8419c12d71f0719817ac0a1f7f09d'
