@@ -18,8 +18,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class DropsView extends View {
-    public DropsView() {
+    private final Main plugin;
+    public DropsView(Main plugin) {
         super(DropsInventory.get(DropsInventory::size), DropsInventory.get(DropsInventory::name));
+        this.plugin = plugin;
         setCancelOnClick(true);
 
 
@@ -33,48 +35,45 @@ public class DropsView extends View {
 
     @Override
     protected void onRender(ViewContext context) {
-        context.update();
-    }
-
-    @Override
-    protected void onUpdate(@NotNull ViewContext context) {
+        //get the spawner
         Spawner sp = getSpawner(context);
-        SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
+        SpawnerWrapper sw = plugin.getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         ConfigurationSection vazioItem = DropsInventory.get(DropsInventory::vazioItem);
         ConfigurationSection dropItem = DropsInventory.get(DropsInventory::dropItem);
+        //for debug purposes
         context.getPlayer().sendMessage(""+sp.getDrops());
 
         String[] dropIt = spawnerSection.getString("Drop-item").split(":");
 
-        if(sp.getDrops() < 1 ) {
-            context.slot(vazioItem.getInt("Slot")).onRender(render -> {
-                render.setItem(Utils.getItemFromConfig(vazioItem));
-            });
-        }else {
-            context.slot(dropItem.getInt("Slot"))
-                    .onRender(render -> {
-                        render.setItem(Utils.getItemFromConfig(dropItem, ImmutableMap.of(
-                                "{quantia}", NumberUtils.format(sp.getDrops(), false),
-                                "{valor_vender}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)
-                        ), TypeUtil.getMaterialFromLegacy(dropIt[0]), Integer.parseInt(dropIt[1])));
-                    }).onClick(click -> {
-                        if(sp.getDrops() < 1) return;
-                        EconomyResponse er = Main.getInstance().getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
-                        if(!er.transactionSuccess()) {
-                            click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
-                            return;
-                        }
-                        click.set("spawner", sp.removeDrop(sp.getDrops()));
-//                        click.updateSlot();
-                        click.update();
-                        click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
-                    });
-        }
+        context.slot(dropItem.getInt("Slot")).rendered(() -> {
+            if(sp.getDrops() < 1) {
+                return Utils.getItemFromConfig(vazioItem);
+            }else {
+                return Utils.getItemFromConfig(dropItem, ImmutableMap.of(
+                    "{quantia}", NumberUtils.format(sp.getDrops(), false),
+                    "{valor_vender}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false)
+                ), TypeUtil.getMaterialFromLegacy(dropIt[0]), Integer.parseInt(dropIt[1]));
+            }
+        }).onClick(click -> {
+            //deposit the money to the player
+            if(sp.getDrops() < 1) return;
+            EconomyResponse er = plugin.getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
+            if(!er.transactionSuccess()) {
+                click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
+                return;
+            }
+            //remove the spawner drops and set it to the context
+            //the spawner is updated within the removeDrop() method so its safe
+            click.set("spawner", sp.removeDrop(sp.getDrops()));
+            click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
+            //update
+            click.update();
+        });
     }
 
     public Spawner getSpawner(ViewContext context) {
         Spawner sp = context.get("spawner");
-        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
+        return plugin.getSpawnerManager().getSpawner(sp.getLocation());
     }
 }

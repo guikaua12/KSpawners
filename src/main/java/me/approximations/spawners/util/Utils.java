@@ -224,13 +224,13 @@ public class Utils {
         if(section.getBoolean("CustomHead")) {
             is = new ItemBuilder(section.getString("Head_url"))
                     .setName(section.getString("Name"))
-                    .setLore(section.getStringList("Lore"))
+                    .setLore(ColorUtil.colored(section.getStringList("Lore")))
                     .wrap();
         }else {
             String[] i = section.getString("Item").split(":");
             is = new ItemBuilder(TypeUtil.getMaterialFromLegacy(i[0]), Integer.parseInt(i[1]))
                     .setName(section.getString("Name"))
-                    .setLore(section.getStringList("Lore"))
+                    .setLore(ColorUtil.colored(section.getStringList("Lore")))
                     .wrap();
         }
         return is;
