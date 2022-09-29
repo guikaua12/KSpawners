@@ -11,13 +11,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public class MenuOpenListener implements Listener {
     private final Main plugin = Main.getInstance();
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInteract(PlayerInteractEvent e) {
         if(!e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         Block block = e.getClickedBlock();

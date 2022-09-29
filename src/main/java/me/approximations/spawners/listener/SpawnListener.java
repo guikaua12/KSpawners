@@ -8,6 +8,7 @@ import me.approximations.spawners.util.NumberUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class SpawnListener implements Listener {
     private final Main plugin = Main.getInstance();
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onSpawnerSpawn(SpawnerSpawnEvent e) {
         Block block = e.getSpawner().getBlock();
         if(!plugin.getSpawnerManager().hasSpawner(block)) return;

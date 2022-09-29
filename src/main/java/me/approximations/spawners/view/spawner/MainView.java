@@ -39,7 +39,9 @@ public class MainView extends View {
     protected void onRender(ViewContext context) {
         Spawner sp = getSpawner(context);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
+        ConfigurationSection spawnersSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         ConfigurationSection infoItem = MainInventory.get(MainInventory::infoItem);
+        String head_url = spawnersSection.getString("MenuHead");
 
         context.slot(infoItem.getInt("Slot"), Utils.getItemFromConfig(infoItem, ImmutableMap.of(
                 "{mobName}", sw.getMobName(),
@@ -47,7 +49,7 @@ public class MainView extends View {
                 "{drops}", NumberUtils.format(sp.getDrops(), false),
                 "{valor_total}", NumberUtils.format(sp.getDrops() * sw.getDropPrice(), false),
                 "{dono}", sp.getDono()
-                )));
+                ), head_url));
 
 //        context.slot(15, new ItemBuilder(Material.BARRIER)
 //                .setName("§cRemover spawner")

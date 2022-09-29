@@ -1,9 +1,10 @@
 Spawners:
   Lobo:
     Ativado: true
-    Item:
+    MenuHead: '24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f'
+    Colocavel:
       CustomHead: true
-      Head_url: "24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f"
+      Head_url: '24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f'
       Item: MONSTER_EGG:95
       Name: '&aGerador de Lobo'
       Lore:

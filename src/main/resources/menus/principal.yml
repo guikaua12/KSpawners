@@ -2,9 +2,6 @@ Nome: 'Gerador'
 Tamanho: 3
 Info:
   Slot: 11
-  CustomHead: true
-  Head_url: '24d7727f52354d24a64bd6602a0ce71a7b484d05963da83b470360faa9ceab5f'
-  Item: MONSTER_EGG:95
   Name: '&a{mobName}'
   Lore:
     - '&fQuantia: &7 {quantia}'

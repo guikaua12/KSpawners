@@ -1,6 +1,7 @@
 package me.approximations.spawners.model;
 
 
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import me.approximations.spawners.Main;
@@ -31,7 +32,6 @@ public class Spawner {
         this.amigos = new HashMap<>();
         this.entityType = sw.getEntityType();
         spawnerWrapperKey = sw.getKey();
-        Main.getInstance().getSpawnerManager().setSpawner(this);
     }
 
     public void addAmigo(Amigo amigo) {
@@ -70,6 +70,10 @@ public class Spawner {
         return this;
     }
 
+    public Location getLocation() {
+        return LocationSerializer.getInstance().decode(this.location);
+    }
+
     public void setAmigoCanBreak(Amigo amigo, boolean canBreak) {
         amigo.setCanBreak(canBreak);
         this.getAmigos().replace(amigo.getNome(), amigo);
@@ -88,7 +92,7 @@ public class Spawner {
         Main.getInstance().getSpawnerManager().setSpawner(this);
     }
 
-    public Location getLocation() {
-        return LocationSerializer.getInstance().decode(this.location);
+    public SpawnerWrapper getSpawnerWrapper() {
+        return Main.getInstance().getSpawnerManager().getSpawnerWrapper(this.spawnerWrapperKey);
     }
 }

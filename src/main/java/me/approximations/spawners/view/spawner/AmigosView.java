@@ -42,14 +42,31 @@ public class AmigosView extends PaginatedView<Amigo> {
     protected void onItemRender(PaginatedViewSlotContext<Amigo> render, ViewItem item, Amigo value) {
         ConfigurationSection amigoItem = AmigosInventory.get(AmigosInventory::amigoItem);
         boolean customHead = amigoItem.getBoolean("CustomHead");
-        String headUrl = amigoItem.getString("Head_url").replace("{player}", value.getNome());
+        String headUrl = amigoItem.getString("Head_url");
         boolean playerHead = headUrl.contains("{player}");
         String[] it = amigoItem.getString("Item").split(":");
+        String name = amigoItem.getString("Name").replace("{player}", value.getNome());
 
-        item.withItem(customHead ? (playerHead ? new ItemBuilder(headUrl, (byte) 0) : new ItemBuilder(headUrl)) : new ItemBuilder(TypeUtil.getMaterialFromLegacy(it[0]), Integer.parseInt(it[1]))
-                .setName(amigoItem.getString("Name"))
-                .setLore(amigoItem.getStringList("Lore"))
-                .wrap()).onClick(click -> {
+        item.rendered(() -> {
+            if(customHead) {
+                if(playerHead) {
+                    return new ItemBuilder(value.getNome(), (byte) 0)
+                            .setName(name)
+                            .setLore(ColorUtil.colored(amigoItem.getStringList("Lore")))
+                            .wrap();
+                }else {
+                    return new ItemBuilder(headUrl)
+                            .setName(name)
+                            .setLore(ColorUtil.colored(amigoItem.getStringList("Lore")))
+                            .wrap();
+                }
+            }else {
+                return new ItemBuilder(TypeUtil.getMaterialFromLegacy(it[0]), Integer.parseInt(it[1]))
+                        .setName(name)
+                        .setLore(ColorUtil.colored(amigoItem.getStringList("Lore")))
+                        .wrap();
+            }
+        }).onClick(click -> {
             Spawner sp = getSpawner(click);
             if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
                 click.getPlayer().sendMessage("§cVocê não é o dono do spawner.");

@@ -201,6 +201,18 @@ public class Utils {
         return new ItemBuilder(material, data).setName(name).setLore(lore).wrap();
     }
 
+    public static ItemStack getItemFromConfig(ConfigurationSection section, Map<String, String> placeholders, String head_url) {
+        String name = section.getString("Name");
+        List<String> lore = section.getStringList("Lore");
+
+        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+            name = name.replace(entry.getKey(), entry.getValue());
+            lore.replaceAll(line -> ColorUtil.colored(line.replace(entry.getKey(), entry.getValue())));
+        }
+
+        return new ItemBuilder(head_url).setName(name).setLore(lore).wrap();
+    }
+
     public static ItemStack getItemFromConfig(ConfigurationSection section) {
         if(section.getBoolean("CustomHead")) {
             return new ItemBuilder(section.getString("Head_url"))
