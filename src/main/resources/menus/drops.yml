@@ -1,7 +1,6 @@
 Nome: 'Gerador - Drops'
 Tamanho: 4
 Drop_vazio:
-  Slot: 13
   CustomHead: false
   Head_url: 'bf40c7716267b1f469ae730d013b140027d8419c12d71f0719817ac0a1f7f09d'
   Item: WEB:0

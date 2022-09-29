@@ -108,7 +108,7 @@ public class Main extends JavaPlugin {
         viewFrame = ViewFrame.of(this,
 //                new SpawnersView(),
                 new MainView(),
-                new DropsView(),
+                new DropsView(this),
                 new AmigosView(),
                 new GerenciarAmigoView(),
                 new TOP10View()
