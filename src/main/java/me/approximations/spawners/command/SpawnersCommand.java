@@ -25,7 +25,16 @@ public class SpawnersCommand {
         if(!block.getType().equals(TypeUtil.getMaterialFromLegacy("MOB_SPAWNER"))) return;
         NBTCompound c = new NBTTileEntity(block.getState());
         player.sendMessage(c.toString());
-//        Spawner sp = Main.getInstance().getSpawnerManager().getSpawner(block);
-//        sp.setDrops()
+    }
+
+    @Command(
+            name = "spawneradmin",
+            target = CommandTarget.PLAYER,
+            aliases = {"sadmin"},
+            permission = "spawners.admin"
+    )
+    public void spawnerAdminCommand(Context<Player> e) {
+        Player p = e.getSender();
+
     }
 }

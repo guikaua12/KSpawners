@@ -4,15 +4,16 @@ import com.jaoow.sql.executor.SQLExecutor;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.DatabaseConfig;
 import me.approximations.spawners.model.User;
+import me.approximations.spawners.serializer.UserSerializer;
 
 import java.sql.SQLException;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public class UserRepository{
-    private Main plugin;
-    private SQLExecutor sqlExecutor;
-    private String TABLE;
+    private final Main plugin;
+    private final SQLExecutor sqlExecutor;
+    private final String TABLE;
 
     public UserRepository(Main plugin, SQLExecutor sqlExecutor) {
         this.plugin = plugin;
@@ -23,7 +24,7 @@ public class UserRepository{
 
 
     public void createTable() {
-        sqlExecutor.execute("CREATE TABLE IF NOT EXISTS "+TABLE+"(nick VARCHAR(255), quantia DOUBLE);");
+        sqlExecutor.execute("CREATE TABLE IF NOT EXISTS "+TABLE+"(nick VARCHAR(255), user VARCHAR(255));");
     }
 
     public void insertOrUpdate(User user) {
@@ -38,7 +39,7 @@ public class UserRepository{
         sqlExecutor.execute("INSERT INTO "+TABLE+" VALUES(?, ?);", c -> {
             try {
                 c.setString(1, user.getNick());
-                c.setDouble(2, user.getSpawnersComprados());
+                c.setString(2, UserSerializer.getInstance().encode(user));
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -46,9 +47,9 @@ public class UserRepository{
     }
 
     public void update(User user) {
-        sqlExecutor.execute("UPDATE "+TABLE+" SET quantia = ? WHERE nick = ?;", c -> {
+        sqlExecutor.execute("UPDATE "+TABLE+" SET user = ? WHERE nick = ?;", c -> {
             try {
-                c.setDouble(1, user.getSpawnersComprados());
+                c.setString(1, UserSerializer.getInstance().encode(user));
                 c.setString(2, user.getNick());
             } catch (SQLException e) {
                 e.printStackTrace();

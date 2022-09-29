@@ -19,6 +19,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
 public class DropsView extends View {
+    private final String SPAWNER_CONTEXT_KEY = "spawner";
     private final Main plugin;
     public DropsView(Main plugin) {
         super(DropsInventory.get(DropsInventory::size), DropsInventory.get(DropsInventory::name));
@@ -33,7 +34,7 @@ public class DropsView extends View {
 
     @Override
     protected void onRender(ViewContext context) {
-        Spawner sp = getSpawner(context);
+        Spawner sp = context.get(SPAWNER_CONTEXT_KEY);
         SpawnerWrapper sw = plugin.getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection spawnerSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         ConfigurationSection vazioItem = DropsInventory.get(DropsInventory::vazioItem);
@@ -58,14 +59,9 @@ public class DropsView extends View {
                 click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
                 return;
             }
-            click.set("spawner", sp.removeDrop(sp.getDrops()));
+            click.set(SPAWNER_CONTEXT_KEY, sp.removeDrop(sp.getDrops()));
             click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
             click.update();
         });
-    }
-
-    public Spawner getSpawner(ViewContext context) {
-        Spawner sp = context.get("spawner");
-        return plugin.getSpawnerManager().getSpawner(sp.getLocation());
     }
 }

@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.util.Arrays;
 
 public class AmigosView extends PaginatedView<Amigo> {
+    private final String SPAWNER_CONTEXT_KEY = "spawner";
     public AmigosView() {
         super(AmigosInventory.get(AmigosInventory::size), AmigosInventory.get(AmigosInventory::name));
         setCancelOnClick(true);
@@ -40,6 +41,7 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onItemRender(PaginatedViewSlotContext<Amigo> render, ViewItem item, Amigo value) {
+        Spawner sp = render.get(SPAWNER_CONTEXT_KEY);
         ConfigurationSection amigoItem = AmigosInventory.get(AmigosInventory::amigoItem);
         boolean customHead = amigoItem.getBoolean("CustomHead");
         String headUrl = amigoItem.getString("Head_url");
@@ -67,13 +69,12 @@ public class AmigosView extends PaginatedView<Amigo> {
                         .wrap();
             }
         }).onClick(click -> {
-            Spawner sp = getSpawner(click);
             if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
                 click.getPlayer().sendMessage("§cVocê não é o dono do spawner.");
                 return;
             }
             if(click.isLeftClick()) {
-                click.open(GerenciarAmigoView.class, ImmutableMap.of("spawner", sp, "amigo", value));
+                click.open(GerenciarAmigoView.class, ImmutableMap.of(SPAWNER_CONTEXT_KEY, sp, "amigo", value));
             }else if(click.isRightClick()) {
                 sp.removeAmigo(value);
                 click.getPlayer().sendMessage("§aO jogador §f"+value.getNome()+" §afoi removido como amigo do seu spawner§8.");
@@ -84,11 +85,11 @@ public class AmigosView extends PaginatedView<Amigo> {
 
     @Override
     protected void onRender(ViewContext context) {
-        context.paginated().setSource(c -> Lists.newArrayList(getSpawner(c).getAmigos().values()));
+        Spawner sp = context.get(SPAWNER_CONTEXT_KEY);
+        context.paginated().setSource(c -> Lists.newArrayList(sp.getAmigos().values()));
         ConfigurationSection adicionarAmigoItem = AmigosInventory.get(AmigosInventory::adicionarAmigoItem);
 
-        context.slot(adicionarAmigoItem.getInt("Slot"), Utils.getItemFromConfig(adicionarAmigoItem)).onClick(click -> {
-            Spawner sp = getSpawner(context);
+        context.slot(adicionarAmigoItem.getInt("Slot"),Utils.getItemFromConfig(adicionarAmigoItem)).onClick(click -> {
             Player p = click.getPlayer();
             if(!click.getPlayer().hasPermission("spawners.admin")) {
                 if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
@@ -125,10 +126,5 @@ public class AmigosView extends PaginatedView<Amigo> {
                     })
                     .build());
         });
-    }
-
-    public Spawner getSpawner(ViewContext context) {
-        Spawner sp = context.get("spawner");
-        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
     }
 }

@@ -6,10 +6,9 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
-import lombok.val;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.SpawnersConfig;
-import me.approximations.spawners.manager.model.SpawnerManager;
+import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.util.*;
@@ -20,9 +19,7 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SpawnerManager_1_8_1_13 implements SpawnerManager {

@@ -5,22 +5,16 @@ import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.inventory.MainInventory;
-import me.approximations.spawners.manager.model.SpawnerManager;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
-import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NumberUtils;
-import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.util.Utils;
 import me.saiintbrisson.minecraft.View;
 import me.saiintbrisson.minecraft.ViewContext;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.HashMap;
-
 public class MainView extends View {
+    private final String SPAWNER_CONTEXT_KEY = "spawner";
 
     public MainView() {
         super(MainInventory.get(MainInventory::size), MainInventory.get(MainInventory::name));
@@ -29,15 +23,15 @@ public class MainView extends View {
         ConfigurationSection amigosItem = MainInventory.get(MainInventory::amigosItem);
 
         slot(dropsItem.getInt("Slot"), Utils.getItemFromConfig(dropsItem))
-                .onClick(click -> click.open(DropsView.class, ImmutableMap.of("spawner", getSpawner(click))));
+                .onClick(click -> click.open(DropsView.class, ImmutableMap.of(SPAWNER_CONTEXT_KEY, click.get(SPAWNER_CONTEXT_KEY))));
 
         slot(amigosItem.getInt("Slot"), Utils.getItemFromConfig(amigosItem))
-                .onClick(click -> click.open(AmigosView.class, ImmutableMap.of("spawner", getSpawner(click))));
+                .onClick(click -> click.open(AmigosView.class, ImmutableMap.of(SPAWNER_CONTEXT_KEY, click.get(SPAWNER_CONTEXT_KEY))));
     }
 
     @Override
     protected void onRender(ViewContext context) {
-        Spawner sp = getSpawner(context);
+        Spawner sp = context.get(SPAWNER_CONTEXT_KEY);
         SpawnerWrapper sw = Main.getInstance().getSpawnerManager().getSpawnerWrapper(sp.getSpawnerWrapperKey());
         ConfigurationSection spawnersSection = SpawnersConfig.get(SpawnersConfig::getSpawners).getConfigurationSection(sw.getKey());
         ConfigurationSection infoItem = MainInventory.get(MainInventory::infoItem);
@@ -95,11 +89,6 @@ public class MainView extends View {
 //            }
 //        });
 
-    }
-
-    public Spawner getSpawner(ViewContext context) {
-        Spawner sp = context.get("spawner");
-        return Main.getInstance().getSpawnerManager().getSpawner(sp.getLocation());
     }
 
 }

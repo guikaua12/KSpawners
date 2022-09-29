@@ -1,4 +1,4 @@
-package me.approximations.spawners.manager.model;
+package me.approximations.spawners.manager;
 
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;

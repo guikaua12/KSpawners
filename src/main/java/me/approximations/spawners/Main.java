@@ -10,28 +10,25 @@ import me.approximations.spawners.dao.SQLProvider;
 import me.approximations.spawners.dao.UserDao;
 import me.approximations.spawners.dao.adapter.UserAdapter;
 import me.approximations.spawners.dao.repository.UserRepository;
+import me.approximations.spawners.dao.scheduler.AutoSave;
 import me.approximations.spawners.listener.*;
-import me.approximations.spawners.manager.model.SpawnerManager;
+import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.SpawnerWrapper;
 import me.approximations.spawners.model.User;
 import me.approximations.spawners.util.ChatConversationUtils;
-import me.approximations.spawners.util.ItemBuilder;
 import me.approximations.spawners.util.NBTEditor;
-import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.versions.SpawnerManager_1_14;
 import me.approximations.spawners.versions.SpawnerManager_1_8_1_13;
 import me.approximations.spawners.view.spawner.AmigosView;
 import me.approximations.spawners.view.spawner.DropsView;
 import me.approximations.spawners.view.spawner.GerenciarAmigoView;
 import me.approximations.spawners.view.spawner.MainView;
-import me.approximations.spawners.view.spawnersShop.TOP10View;
 import me.saiintbrisson.bukkit.command.BukkitFrame;
 import me.saiintbrisson.minecraft.ViewFrame;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -87,7 +84,7 @@ public class Main extends JavaPlugin {
         setupListener();
         setupCommand(this);
         setupView();
-        setupShop();
+        setupSpawners();
     }
 
     private void setupConfig() {
@@ -108,8 +105,7 @@ public class Main extends JavaPlugin {
                 new MainView(),
                 new DropsView(this),
                 new AmigosView(),
-                new GerenciarAmigoView(),
-                new TOP10View()
+                new GerenciarAmigoView()
         ).register();
     }
 
@@ -118,23 +114,18 @@ public class Main extends JavaPlugin {
         bukkitFrame.registerCommands(new SpawnersCommand());
     }
 
-    private void setupShop() {
+    private void setupSpawners() {
         ConfigurationSection s = SpawnersConfig.get(SpawnersConfig::getSpawners);
         for (String key : s.getKeys(false)) {
             //
             ConfigurationSection spsection = s.getConfigurationSection(key);
-            boolean ativado = spsection.getBoolean("Ativado");
             EntityType entity = EntityType.valueOf(spsection.getString("Entity"));
             String mobName = spsection.getString("MobName");
             double dropPrice = spsection.getDouble("DropPrice");
 
-            //loja
-            double shopPrice = spsection.getDouble("Loja.Preco");
-
             // adicionar na map
             SpawnerWrapper sw = SpawnerWrapper.builder()
                     .key(key)
-                    .ativado(ativado)
                     .entityType(entity)
                     .mobName(mobName)
                     .dropPrice(dropPrice)
@@ -154,6 +145,8 @@ public class Main extends JavaPlugin {
         userDao = new UserDao(userRepository, this);
 
         sqlProvider.registerEvents();
+
+        AutoSave autoSave = new AutoSave(this);
     }
 
     private boolean setupEconomy() {
