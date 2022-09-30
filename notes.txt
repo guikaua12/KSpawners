@@ -18,4 +18,3 @@ Unknown bug
 
 TODO:
 - Fix 1.14 unknown bug
-- Fix 1.14+ GerenciarAmigosView items
