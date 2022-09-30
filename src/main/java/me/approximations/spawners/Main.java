@@ -1,20 +1,13 @@
 package me.approximations.spawners;
 
-import com.jaoow.sql.executor.SQLExecutor;
 import de.tr7zw.nbtinjector.NBTInjector;
 import lombok.Getter;
 import me.approximations.spawners.command.SpawnersCommand;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.register.ConfigurationRegister;
-import me.approximations.spawners.dao.SQLProvider;
-import me.approximations.spawners.dao.UserDao;
-import me.approximations.spawners.dao.adapter.UserAdapter;
-import me.approximations.spawners.dao.repository.UserRepository;
-import me.approximations.spawners.dao.scheduler.AutoSave;
 import me.approximations.spawners.listener.*;
 import me.approximations.spawners.manager.SpawnerManager;
 import me.approximations.spawners.model.SpawnerWrapper;
-import me.approximations.spawners.model.User;
 import me.approximations.spawners.util.ChatConversationUtils;
 import me.approximations.spawners.util.NBTEditor;
 import me.approximations.spawners.versions.SpawnerManager_1_14;
@@ -47,18 +40,11 @@ public class Main extends JavaPlugin {
     @Getter
     private Economy econ;
     @Getter
-    private SQLExecutor sqlExecutor;
-    @Getter
-    private UserRepository userRepository;
-    @Getter
-    private UserDao userDao;
-    @Getter
     private SpawnerManager spawnerManager;
 
 
     @Override
     public void onLoad() {
-        List<Integer> a = new ArrayList<Integer>();
         this.saveDefaultConfig();
         setupConfig();
         if(NBTEditor.getMinecraftVersion().greaterThanOrEqualTo(NBTEditor.MinecraftVersion.v1_14)) {
@@ -79,7 +65,6 @@ public class Main extends JavaPlugin {
             }
         }, 150L);
 
-        setupDatabase();
         ChatConversationUtils.scheduleTimeoutRunnable();
         setupListener();
         setupCommand(this);
@@ -132,21 +117,6 @@ public class Main extends JavaPlugin {
                     .build();
             spawnerManager.insertSpawnerWrapper(sw);
         }
-    }
-
-    private void setupDatabase() {
-        SQLProvider sqlProvider = new SQLProvider(this);
-        sqlExecutor = new SQLProvider(this).setupDatabase();
-        UserAdapter ua = new UserAdapter();
-        sqlExecutor.registerAdapter(User.class, ua);
-        userRepository = new UserRepository(this, sqlExecutor);
-        userRepository.createTable();
-
-        userDao = new UserDao(userRepository, this);
-
-        sqlProvider.registerEvents();
-
-        AutoSave autoSave = new AutoSave(this);
     }
 
     private boolean setupEconomy() {

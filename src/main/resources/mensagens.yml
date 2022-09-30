@@ -1,0 +1,26 @@
+Mensagens:
+  Spawneradmin:
+    - '&cLista de comandos disponíveis:'
+    - '&c/spawneradmin givespawner <player> <spawner> <quantia>'
+  Jogador-invalido: '&cO jogador inserido é inválido.'
+  Spawner-invalido: '&cO spawner inserido é inválido.'
+  Quantia-invalida: '&cA quantia inserida é inválida.'
+  Deu-Spawner: '&aVocê deu {quantia} spawners de {mobName} para {target}.'
+  Sem-perm-remover: '&cVocê não tem permissão para remover geradores.'
+  Sem-perm-matar: '&cVocê não tem permissão para matar mobs desse spawner!'
+  Sem-perm-abrir: '&cVocê não tem permissão para abrir esse gerador.'
+  Sem-perm-adicionar: '&cVocê não tem permissão para adicionar geradores.'
+  Adicionou: '&aForam adicionados {quantia} spawners.'
+  Ha-spawners: '&cHá spawners num raio de 5 blocos.'
+  Nao-dono: '&cVocê não é o dono do spawner.'
+  Removeu-amigo: '&aO jogador &f{player} &afoi removido como amigo do seu spawner&8.'
+  Adicionar-amigo:
+    - '&aDigite o nick de um jogador.'
+    - '&7Digite &ncancelar&7 para cancelar.'
+  Demorou: '&cVocê demorou para responder.'
+  Erro-self: '&cVocê não pode adicionar a si mesmo.'
+  Erro-amigo-existe: '&cEsse jogador já está no spawner.'
+  Adicionou-amigo: '&aO jogador &f{player} &afoi adicionado como amigo ao seu spawner&8.'
+  Erro-vender: '&cOcorreu um erro ao tentar vender.'
+  Vendeu: '&aVocê vendeu os drops do spawner!'
+

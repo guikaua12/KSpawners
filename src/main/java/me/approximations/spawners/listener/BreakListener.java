@@ -2,6 +2,7 @@ package me.approximations.spawners.listener;
 
 import me.approximations.spawners.Main;
 import me.approximations.spawners.api.event.SpawnerBreakEvent;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
@@ -46,11 +47,11 @@ public class BreakListener implements Listener {
             if(!player.getName().equalsIgnoreCase(spawner.getDono())) {
                 Amigo amigo = spawner.getAmigoByName(player.getName());
                 if(amigo == null) {
-                    player.sendMessage("§cVocê não tem permissão para remover geradores.");
+                    player.sendMessage(MessagesConfig.get(MessagesConfig::semPermRemover));
                     return;
                 }
                 if(!amigo.isCanBreak()) {
-                    e.getPlayer().sendMessage("§cVocê não tem permissão para remover geradores.");
+                    e.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::semPermRemover));
                     return;
                 }
             }

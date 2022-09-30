@@ -4,6 +4,7 @@ import com.henryfabio.minecraft.configinjector.bukkit.injector.BukkitConfigurati
 import lombok.RequiredArgsConstructor;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.configuration.DatabaseConfig;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.inventory.AmigosInventory;
 import me.approximations.spawners.configuration.inventory.DropsInventory;
@@ -22,7 +23,8 @@ public class ConfigurationRegister {
                 "menus/principal.yml",
                 "menus/drops.yml",
                 "menus/amigos.yml",
-                "menus/gerenciar_amigos.yml"
+                "menus/gerenciar_amigos.yml",
+                "mensagens.yml"
         );
 
         bukkitConfigurationInjector.injectConfiguration(
@@ -31,7 +33,8 @@ public class ConfigurationRegister {
                 MainInventory.instance(),
                 DropsInventory.instance(),
                 AmigosInventory.instance(),
-                GerenciarAmigosInventory.instance()
+                GerenciarAmigosInventory.instance(),
+                MessagesConfig.instance()
         );
     }
 

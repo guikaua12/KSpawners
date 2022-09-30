@@ -15,10 +15,12 @@ public class SpawnerPlaceEvent extends Event implements Cancellable {
     private boolean cancelled;
     private Player player;
     private Spawner spawner;
+    private double quantia;
 
-    public SpawnerPlaceEvent(Player player, Spawner spawner) {
+    public SpawnerPlaceEvent(Player player, Spawner spawner, double quantia) {
         this.player = player;
         this.spawner = spawner;
+        this.quantia = quantia;
     }
 
 

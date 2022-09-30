@@ -3,6 +3,7 @@ package me.approximations.spawners.view.spawner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.configuration.inventory.AmigosInventory;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
@@ -70,14 +71,14 @@ public class AmigosView extends PaginatedView<Amigo> {
             }
         }).onClick(click -> {
             if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
-                click.getPlayer().sendMessage("§cVocê não é o dono do spawner.");
+                click.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::naoDono));
                 return;
             }
             if(click.isLeftClick()) {
                 click.open(GerenciarAmigoView.class, ImmutableMap.of(SPAWNER_CONTEXT_KEY, sp, "amigo", value));
             }else if(click.isRightClick()) {
                 sp.removeAmigo(value);
-                click.getPlayer().sendMessage("§aO jogador §f"+value.getNome()+" §afoi removido como amigo do seu spawner§8.");
+                click.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::removeuAmigo).replace("{player}", value.getNome()));
                 click.update();
             }
         });
@@ -93,36 +94,36 @@ public class AmigosView extends PaginatedView<Amigo> {
             Player p = click.getPlayer();
             if(!click.getPlayer().hasPermission("spawners.admin")) {
                 if(!click.getPlayer().getName().equalsIgnoreCase(sp.getDono())) {
-                    click.getPlayer().sendMessage("§cVocê não é o dono do spawner.");
+                    click.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::naoDono));
                     return;
                 }
             }
             click.close();
             ChatConversationUtils.awaitResponse(click.getPlayer(), ChatConversationUtils.Request.builder()
-                    .messages(Arrays.asList("§aDigite o nick de um jogador.", "§7Digite §ncancelar§7 para cancelar."))
+                    .messages(ColorUtil.colored(MessagesConfig.get(MessagesConfig::adicionarAmigo)))
                     .timeoutDuration(Duration.ofSeconds(30))
-                    .timeoutWarn("§cVocê demorou para responder.")
+                    .timeoutWarn(MessagesConfig.get(MessagesConfig::demorou))
                     .responseConsumer(response -> {
                         if(response.equalsIgnoreCase(p.getName())) {
-                            p.sendMessage("§cVocê não pode adicionar a si mesmo.");
+                            p.sendMessage(MessagesConfig.get(MessagesConfig::erroSelf));
                             return;
                         }
                         if(sp.getAmigoByName(response) != null) {
-                            p.sendMessage("§cEsse jogador já está no spawner.");
+                            p.sendMessage(MessagesConfig.get(MessagesConfig::erroAmigoExiste));
                             return;
                         }
                         OfflinePlayer player = Bukkit.getOfflinePlayer(response);
                         if(player == null) {
-                            p.sendMessage("§cJogador não encontrado.");
+                            p.sendMessage(MessagesConfig.get(MessagesConfig::jogadorInválido));
                             return;
                         }
                         if(!player.hasPlayedBefore()) {
-                            p.sendMessage("§cJogador não encontrado.");
+                            p.sendMessage(MessagesConfig.get(MessagesConfig::jogadorInválido));
                             return;
                         }
                         Amigo amg = new Amigo(response, false, false, false);
                         sp.addAmigo(amg);
-                        p.sendMessage("§aO jogador §f"+response+" §afoi adicionado como amigo ao seu spawner§8.");
+                        p.sendMessage(MessagesConfig.get(MessagesConfig::adicionouAmigo).replace("{player}", response));
                     })
                     .build());
         });

@@ -3,6 +3,7 @@ package me.approximations.spawners.listener;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.approximations.spawners.Main;
 import me.approximations.spawners.api.event.SpawnerPlaceEvent;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.model.SpawnerWrapper;
@@ -44,7 +45,7 @@ public class PlaceListener implements Listener {
         double quantia = nbtItem.getDouble("quantia");
         SpawnerWrapper sw = plugin.getSpawnerManager().getSpawnerWrapper(nbtItem.getString("sw"));
         Spawner sp = new Spawner(player.getName(), quantia, e.getClickedBlock().getLocation().add(0, 1, 0), sw);
-        SpawnerPlaceEvent spawnerPlaceEvent = new SpawnerPlaceEvent(player, sp);
+        SpawnerPlaceEvent spawnerPlaceEvent = new SpawnerPlaceEvent(player, sp, quantia);
         Bukkit.getPluginManager().callEvent(spawnerPlaceEvent);
     }
 
@@ -64,21 +65,23 @@ public class PlaceListener implements Listener {
                     if (!player.getName().equalsIgnoreCase(sp.getDono())) {
                         Amigo amigo = sp.getAmigoByName(player.getName());
                         if (amigo == null) {
-                            player.sendMessage("§cVocê não tem permissão para adicionar geradores.");
+                            player.sendMessage(MessagesConfig.get(MessagesConfig::semPermAdicionar));
                             return;
                         }
                         if (!amigo.isCanPlace()) {
-                            player.sendMessage("§cVocê não tem permissão para adicionar geradores.");
+                            player.sendMessage(MessagesConfig.get(MessagesConfig::semPermAdicionar));
                             return;
                         }
                     }
                 }
+
                 sp.addQuantia(spawner.getQuantia());
                 Utils.removeItemInHand(player, 1);
-                player.sendMessage("§aForam adicionados " + NumberUtils.format(spawner.getQuantia(), false) + " spawners.");
+
+                player.sendMessage(MessagesConfig.get(MessagesConfig::adicionou).replace("{quantia}", NumberUtils.format(e.getQuantia(), false)));
                 return;
             } else {
-                player.sendMessage("§cHá spawners num raio de 5 blocos.");
+                player.sendMessage(MessagesConfig.get(MessagesConfig::haSpawners));
                 return;
             }
         }

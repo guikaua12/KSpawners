@@ -1,13 +1,12 @@
 package me.approximations.spawners.listener;
 
 import com.google.common.collect.ImmutableMap;
-import lombok.RequiredArgsConstructor;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.model.Amigo;
 import me.approximations.spawners.model.Spawner;
 import me.approximations.spawners.util.TypeUtil;
 import me.approximations.spawners.view.spawner.MainView;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +30,7 @@ public class MenuOpenListener implements Listener {
             if(!player.getName().equalsIgnoreCase(sp.getDono())) {
                 Amigo amigo = sp.getAmigoByName(player.getName());
                 if(amigo == null) {
-                    player.sendMessage("§cVocê não tem permissão para abrir esse gerador.");
+                    player.sendMessage(MessagesConfig.get(MessagesConfig::semPermAbrir));
                     return;
                 }
             }
