@@ -1,4 +1,4 @@
-# spawners
+# KSpawners
 Plugin de spawner relativamente simples porém funcional e com customização de inventário e mensagens.
 
 ### Versões compatíveis
