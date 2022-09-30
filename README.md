@@ -19,3 +19,7 @@ Plugin de spawner relativamente simples porém funcional e com customização de
 - [Inventory Framework](https://github.com/DevNatan/inventory-framework) - API pra criação de inventário sem boilerplate
 - [SQL Provider](https://github.com/Jaoow/sql-provider) - API pra conexão com SQL
 - [Lombok](https://github.com/projectlombok/lombok) - Gera getter/setter e construtores através de anotações
+
+### A fazer:
+- Adicionar sistema de booster
+- Plugin de SpawnersShop
