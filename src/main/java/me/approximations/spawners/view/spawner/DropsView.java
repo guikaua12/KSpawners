@@ -2,6 +2,7 @@ package me.approximations.spawners.view.spawner;
 
 import com.google.common.collect.ImmutableMap;
 import me.approximations.spawners.Main;
+import me.approximations.spawners.configuration.MessagesConfig;
 import me.approximations.spawners.configuration.SpawnersConfig;
 import me.approximations.spawners.configuration.inventory.DropsInventory;
 import me.approximations.spawners.model.Spawner;
@@ -56,11 +57,11 @@ public class DropsView extends View {
             if(sp.getDrops() < 1) return;
             EconomyResponse er = plugin.getEcon().depositPlayer(click.getPlayer(), sp.getDrops() * sw.getDropPrice());
             if(!er.transactionSuccess()) {
-                click.getPlayer().sendMessage("§cOcorreu um erro ao tentar vender.");
+                click.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::erroVender));
                 return;
             }
             click.set(SPAWNER_CONTEXT_KEY, sp.removeDrop(sp.getDrops()));
-            click.getPlayer().sendMessage("§aVocê vendeu os drops do spawner!");
+            click.getPlayer().sendMessage(MessagesConfig.get(MessagesConfig::vendeu));
             click.update();
         });
     }
